@@ -2,21 +2,17 @@ apply plugin: 'com.android.application'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'com.neenbedankt.android-apt'
-//TODO uncomment line below after adding fabric api secret and key to fabric.properties
-//apply plugin: 'io.fabric'
 
 //Setup distribution options, based on local variable $ANDROID_DISTRIBUTION
 enum DISTRIBUTION_CHANNEL {
-    CRASHLYTICS, PLAY
+    PLAY
 }
 
 def distribution = System.getenv('ANDROID_DISTRIBUTION')
 def distributionChannel
 def distributionGroup
 if (distribution != null) {
-    if (distribution.startsWith('crashlytics')) {
-        distributionChannel = DISTRIBUTION_CHANNEL.CRASHLYTICS
-    } else if (distribution.startsWith('play')) {
+    if (distribution.startsWith('play')) {
         distributionChannel = DISTRIBUTION_CHANNEL.PLAY
     }
     distributionGroup = distribution.substring(distribution.indexOf('-') + 1)
@@ -31,9 +27,9 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         testInstrumentationRunner 'io.ribot.app.util.UnlockDeviceTestRunner'
-        versionCode 1000
+        versionCode 1100
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
-        versionName '0.1.0'
+        versionName '0.1.1'
 
         def externalVersionNameSuffix = System.getenv('VERSION_NAME_SUFFIX');
         if (externalVersionNameSuffix != null) versionName += '.' + externalVersionNameSuffix
@@ -75,11 +71,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            ext.betaDistributionReleaseNotesFilePath = file('../crashlytics_release_notes.txt').absolutePath
-
-            if (distributionGroup != null && distributionChannel == DISTRIBUTION_CHANNEL.CRASHLYTICS) {
-                ext.betaDistributionGroupAliases = distributionGroup
-            }
         }
 
         debug {
@@ -105,12 +96,13 @@ android {
 }
 
 play {
-    serviceAccountEmail = 'your-service-account-email'
-    pk12File = file('key.p12')
-
     if (distributionGroup != null && distributionChannel == DISTRIBUTION_CHANNEL.PLAY) {
         track = distributionGroup
+    } else {
+        track = 'alpha'
     }
+    serviceAccountEmail = '***REMOVED***'
+    pk12File = file('keystore/play_store.p12')
 }
 
 dependencies {
@@ -144,9 +136,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
-        transitive = true;
-    }
 
     compile  "com.google.dagger:dagger:$DAGGER_VERSION"
     apt      "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
