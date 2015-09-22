@@ -89,18 +89,16 @@ This will run all the code analysis tools and unit tests in the following order:
  
 ## Distribution
 
-The project can be distributed using either [Crashlytics](http://support.crashlytics.com/knowledgebase/articles/388925-beta-distributions-with-gradle) or the [Google Play Store](https://github.com/Triple-T/gradle-play-publisher).
+The project is distributed using the [Google Play Store](https://github.com/Triple-T/gradle-play-publisher).
 
 To do this, set up a local variable `$ANDROID_DISTRIBUTION` to any of the following values:
 
     play-production
     play-alpha
     play-beta
-    crashlytics-yourgroupname
-    crashlytics-yourgroupname2
 
     etc
 
 Then use the following command e.g. on your CI server:
 
-    ./gradlew clean check connectedAndroidTest assembleRelease $(if [[ $ANDROID_DISTRIBUTION == crashlytics-* ]]; then echo crashlyticsUploadDistributionRelease; else echo publishApkRelease; fi )
+    ./gradlew clean check connectedAndroidTest publishRelease

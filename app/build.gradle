@@ -96,7 +96,11 @@ android {
 }
 
 play {
-    track = 'alpha'
+    if (distributionGroup != null && distributionChannel == DISTRIBUTION_CHANNEL.PLAY) {
+        track = distributionGroup
+    } else {
+        track = 'alpha'
+    }
     serviceAccountEmail = '***REMOVED***'
     pk12File = file('keystore/play_store.p12')
 }
