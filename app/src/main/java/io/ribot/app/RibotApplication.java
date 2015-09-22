@@ -3,9 +3,7 @@ package io.ribot.app;
 import android.app.Application;
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
 
-import io.fabric.sdk.android.Fabric;
 import io.ribot.app.injection.component.ApplicationComponent;
 import io.ribot.app.injection.component.DaggerApplicationComponent;
 import io.ribot.app.injection.module.ApplicationModule;
@@ -21,7 +19,6 @@ public class RibotApplication extends Application  {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
-            Fabric.with(this, new Crashlytics());
         }
 
         mApplicationComponent = DaggerApplicationComponent.builder()
