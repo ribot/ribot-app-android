@@ -1,5 +1,6 @@
 package io.ribot.app.injection.module;
 
+import android.accounts.AccountManager;
 import android.app.Application;
 
 import com.squareup.otto.Bus;
@@ -38,6 +39,11 @@ public class ApplicationModule {
     @Singleton
     Bus provideEventBus() {
         return new Bus();
+    }
+
+    @Provides
+    AccountManager provideAccountManager() {
+        return AccountManager.get(mApplication);
     }
 
 }

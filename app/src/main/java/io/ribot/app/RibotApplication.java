@@ -3,7 +3,6 @@ package io.ribot.app;
 import android.app.Application;
 import android.content.Context;
 
-
 import io.ribot.app.injection.component.ApplicationComponent;
 import io.ribot.app.injection.component.DaggerApplicationComponent;
 import io.ribot.app.injection.module.ApplicationModule;

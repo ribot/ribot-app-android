@@ -1,0 +1,10 @@
+<resources>
+    <style name="ProgressWhite" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/white</item>
+        <item name="android:indeterminateTintMode">src_in</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.WindowTransitions">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+</resources>
