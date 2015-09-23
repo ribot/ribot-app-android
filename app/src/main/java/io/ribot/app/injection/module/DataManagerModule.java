@@ -6,8 +6,8 @@ import dagger.Module;
 import dagger.Provides;
 import io.ribot.app.data.local.DatabaseHelper;
 import io.ribot.app.data.local.PreferencesHelper;
-import io.ribot.app.data.remote.RetrofitHelper;
-import io.ribot.app.data.remote.RibotsService;
+import io.ribot.app.data.remote.GoogleAuthHelper;
+import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.injection.scope.PerDataManager;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
@@ -38,13 +38,19 @@ public class DataManagerModule {
 
     @Provides
     @PerDataManager
-    RibotsService provideRibotsService() {
-        return new RetrofitHelper().newRibotsService();
+    RibotService provideRibotService() {
+        return RibotService.Instance.newRibotService();
     }
 
     @Provides
     @PerDataManager
     Scheduler provideSubscribeScheduler() {
         return Schedulers.io();
+    }
+
+    @Provides
+    @PerDataManager
+    GoogleAuthHelper providesGoogleAuthHelper() {
+        return new GoogleAuthHelper();
     }
 }

@@ -1,5 +1,6 @@
 package io.ribot.app.data;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,18 +12,31 @@ import javax.inject.Inject;
 import io.ribot.app.RibotApplication;
 import io.ribot.app.data.local.DatabaseHelper;
 import io.ribot.app.data.local.PreferencesHelper;
-import io.ribot.app.data.remote.RibotsService;
+import io.ribot.app.data.model.Ribot;
+import io.ribot.app.data.remote.GoogleAuthHelper;
+import io.ribot.app.data.remote.RibotService;
+import io.ribot.app.data.remote.RibotService.SignInRequest;
+import io.ribot.app.data.remote.RibotService.SignInResponse;
 import io.ribot.app.injection.component.DaggerDataManagerComponent;
 import io.ribot.app.injection.module.DataManagerModule;
+import rx.Observable;
 import rx.Scheduler;
+import rx.functions.Func1;
 
 public class DataManager {
 
-    @Inject protected RibotsService mRibotsService;
-    @Inject protected DatabaseHelper mDatabaseHelper;
-    @Inject protected PreferencesHelper mPreferencesHelper;
-    @Inject protected Bus mBus;
-    @Inject protected Scheduler mSubscribeScheduler;
+    @Inject
+    protected RibotService mRibotService;
+    @Inject
+    protected DatabaseHelper mDatabaseHelper;
+    @Inject
+    protected PreferencesHelper mPreferencesHelper;
+    @Inject
+    protected Bus mBus;
+    @Inject
+    protected Scheduler mSubscribeScheduler;
+    @Inject
+    protected GoogleAuthHelper mGoogleAuthHelper;
 
     public DataManager(Context context) {
         injectDependencies(context);
@@ -32,12 +46,12 @@ public class DataManager {
      * At the moment this is not possible to do with Dagger because the Gradle APT plugin doesn't
      * work for the unit test variant, plus Dagger 2 doesn't provide a nice way of overriding
      * modules */
-    public DataManager(RibotsService ribotsService,
+    public DataManager(RibotService ribotService,
                        DatabaseHelper databaseHelper,
                        Bus bus,
                        PreferencesHelper preferencesHelper,
                        Scheduler subscribeScheduler) {
-        mRibotsService = ribotsService;
+        mRibotService = ribotService;
         mDatabaseHelper = databaseHelper;
         mBus = bus;
         mPreferencesHelper = preferencesHelper;
@@ -58,6 +72,24 @@ public class DataManager {
 
     public Scheduler getSubscribeScheduler() {
         return mSubscribeScheduler;
+    }
+
+    public Observable<Ribot> signIn(Context context, Account account) {
+        return mGoogleAuthHelper.retrieveAuthTokenAsObservable(context, account)
+                .concatMap(new Func1<String, Observable<SignInResponse>>() {
+                    @Override
+                    public Observable<SignInResponse> call(String googleAccessToken) {
+                        return mRibotService.signIn(new SignInRequest(googleAccessToken));
+                    }
+                })
+                .map(new Func1<SignInResponse, Ribot>() {
+                    @Override
+                    public Ribot call(SignInResponse signInResponse) {
+                        mPreferencesHelper.putAccessToken(signInResponse.accessToken);
+                        mPreferencesHelper.putSignedInRibot(signInResponse.ribot);
+                        return signInResponse.ribot;
+                    }
+                });
     }
 
 

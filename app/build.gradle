@@ -27,9 +27,9 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         testInstrumentationRunner 'io.ribot.app.util.UnlockDeviceTestRunner'
-        versionCode 1100
+        versionCode 2000
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
-        versionName '0.1.1'
+        versionName '0.2.0'
 
         def externalVersionNameSuffix = System.getenv('VERSION_NAME_SUFFIX');
         if (externalVersionNameSuffix != null) versionName += '.' + externalVersionNameSuffix
@@ -93,6 +93,17 @@ android {
         warning 'InvalidPackage'
     }
 
+    sourceSets {
+        // Configure a source dir that is common to instrumentation and unit tests so that
+        // we can share code between both
+        androidTest {
+            java.srcDirs = ['src/androidTest/java', 'src/commonTest/java']
+        }
+        test {
+            java.srcDirs = ['src/test/java', 'src/commonTest/java']
+        }
+    }
+
 }
 
 play {
@@ -106,11 +117,11 @@ play {
 }
 
 dependencies {
-    final PLAY_SERVICES_VERSION = '7.8.0'
+    final PLAY_SERVICES_VERSION = '8.1.0'
     final SUPPORT_LIBRARY_VERSION = '23.0.1'
-    final RETROFIT_VERSION = '2.0.0-beta1'
+    final RETROFIT_VERSION = '2.0.0-beta2'
     final DAGGER_VERSION = '2.0.1'
-    final DEXMAKER_VERSION = '1.2'
+    final DEXMAKER_VERSION = '1.4'
     final HAMCREST_VERSION = '1.3'
     final MOCKITO_VERSION = '1.10.19'
     final ESPRESSO_VERSION = '2.2.1'
@@ -124,21 +135,23 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.sqlbrite:sqlbrite:0.3.1'
     compile "com.squareup.retrofit:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:adapter-rxjava:$RETROFIT_VERSION"
-    compile 'com.squareup:otto:1.3.8'
 
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.sqlbrite:sqlbrite:0.3.1'
+    compile 'com.squareup:otto:1.3.8'
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 
-    compile  "com.google.dagger:dagger:$DAGGER_VERSION"
-    apt      "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
 
     androidTestCompile "junit:junit:$JUNIT_VERSION"
@@ -149,11 +162,14 @@ dependencies {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
     androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
     androidTestCompile "com.android.support.test:runner:$RUNNER_VERSION"
     androidTestCompile "com.android.support.test:rules:$RUNNER_VERSION"
     androidTestCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
-    androidTestCompile "com.google.dexmaker:dexmaker:$DEXMAKER_VERSION"
-    androidTestCompile "com.google.dexmaker:dexmaker-mockito:$DEXMAKER_VERSION"
+    // TODO see if it's possibly to migrate to official Google dexmaker when they release v1.4
+    androidTestCompile "com.crittercism.dexmaker:dexmaker:$DEXMAKER_VERSION"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-dx:$DEXMAKER_VERSION"
+    androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:$DEXMAKER_VERSION"
 
     androidTestApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 
@@ -166,6 +182,8 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+
+    testApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
 }
 
 
