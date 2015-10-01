@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ribot</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_sign_out">Sign Out</string>
     <string name="action_sign_in">Sign In</string>
 
     <string name="dialog_action_ok">OK</string>

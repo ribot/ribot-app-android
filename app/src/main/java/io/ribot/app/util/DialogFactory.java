@@ -20,6 +20,13 @@ public class DialogFactory {
         return alertDialog.create();
     }
 
+    public static Dialog createSimpleOkErrorDialog(Context context, String message) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
+                .setMessage(message)
+                .setNeutralButton(R.string.dialog_action_ok, null);
+        return alertDialog.create();
+    }
+
     public static Dialog createSimpleOkErrorDialog(Context context,
                                                    @StringRes int titleResource,
                                                    @StringRes int messageResource) {
@@ -27,6 +34,12 @@ public class DialogFactory {
         return createSimpleOkErrorDialog(context,
                 context.getString(titleResource),
                 context.getString(messageResource));
+    }
+
+    public static Dialog createSimpleOkErrorDialog(Context context,
+                                                   @StringRes int messageResource) {
+
+        return createSimpleOkErrorDialog(context, context.getString(messageResource));
     }
 
     public static Dialog createGenericErrorDialog(Context context, String message) {

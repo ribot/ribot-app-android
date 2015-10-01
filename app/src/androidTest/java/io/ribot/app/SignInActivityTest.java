@@ -10,7 +10,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -45,7 +44,8 @@ public class SignInActivityTest {
             RibotApplication.get(InstrumentationRegistry.getTargetContext()),
             true);
     public final ClearDataRule clearDataRule = new ClearDataRule(component);
-    public final IntentsTestRule<SignInActivity> main = new IntentsTestRule<>(SignInActivity.class);
+    public final IntentsTestRule<SignInActivity> main =
+            new IntentsTestRule<>(SignInActivity.class, false, false);
     // TestComponentRule needs to go first so we make sure the ApplicationTestComponent is set
     // in the Application before any Activity is launched.
     // ClearDataRule must run after the TestComponent is set up but before ActivityTestRule.
@@ -54,26 +54,10 @@ public class SignInActivityTest {
 
     private Account mSelectedAccount;
 
-    @Before
-    public void stubAccountPickerIntent() {
-        // Stub the account picker using Espresso intents.
-        // It requires the test devices to be signed in into at least 1 Google account.
-        Intent data = new Intent();
-        AccountManager accountManager = AccountManager
-                .get(InstrumentationRegistry.getTargetContext());
-        Account[] deviceAccounts = accountManager.getAccountsByType("com.google");
-        mSelectedAccount = deviceAccounts[0];
-        data.putExtra(AccountManager.KEY_ACCOUNT_NAME, mSelectedAccount.name);
-        ActivityResult result = new ActivityResult(Activity.RESULT_OK, data);
-        // The account picker intent is a bit special and it doesn't seem to have an Action or
-        // package, so we have to match it by some of the extra keys.
-        // This is not ideal but I couldn't find a better way.
-        intending(hasExtraWithKey("allowableAccountTypes"))
-                .respondWith(result);
-    }
-
     @Test
     public void checkViewsDisplay() {
+        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+
         onView(withId(R.id.button_sign_in))
                 .check(matches(isDisplayed()));
         onView(withText(R.string.sign_in_message))
@@ -84,6 +68,9 @@ public class SignInActivityTest {
 
     @Test
     public void signInSuccessfulNavigatesToWelcome() {
+        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        stubAccountPickerIntent();
+
         // Stub sign in method in the DataManager
         Ribot ribot = MockModelFabric.newRibot();
         doReturn(Observable.just(ribot))
@@ -101,6 +88,9 @@ public class SignInActivityTest {
 
     @Test
     public void signInFailsWithGeneralError() {
+        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        stubAccountPickerIntent();
+
         // Stub an error when calling sign in
         doReturn(Observable.error(new RuntimeException("Error")))
                 .when(component.getDataManager())
@@ -114,6 +104,9 @@ public class SignInActivityTest {
 
     @Test
     public void signInFailsWithProfileNotFound() {
+        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        stubAccountPickerIntent();
+
         // Stub with http 403 error
         HttpException http403Exception = new HttpException(Response.error(403, null));
         doReturn(Observable.error(http403Exception))
@@ -126,5 +119,33 @@ public class SignInActivityTest {
                 .getString(R.string.error_ribot_profile_not_found, mSelectedAccount.name);
         onView(withText(expectedWelcome))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkPopUpMessageDisplays() {
+        String popUpMessage = "You have been signed out";
+        Intent intent = SignInActivity
+                .newStartIntent(component.getApplication(), false, popUpMessage);
+        main.launchActivity(intent);
+
+        onView(withText(popUpMessage))
+                .check(matches(isDisplayed()));
+    }
+
+    private void stubAccountPickerIntent() {
+        // Stub the account picker using Espresso intents.
+        // It requires the test devices to be signed in into at least 1 Google account.
+        Intent data = new Intent();
+        AccountManager accountManager = AccountManager
+                .get(InstrumentationRegistry.getTargetContext());
+        Account[] deviceAccounts = accountManager.getAccountsByType("com.google");
+        mSelectedAccount = deviceAccounts[0];
+        data.putExtra(AccountManager.KEY_ACCOUNT_NAME, mSelectedAccount.name);
+        ActivityResult result = new ActivityResult(Activity.RESULT_OK, data);
+        // The account picker intent is a bit special and it doesn't seem to have an Action or
+        // package, so we have to match it by some of the extra keys.
+        // This is not ideal but I couldn't find a better way.
+        intending(hasExtraWithKey("allowableAccountTypes"))
+                .respondWith(result);
     }
 }

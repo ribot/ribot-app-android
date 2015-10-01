@@ -14,7 +14,9 @@ import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.main.MainMvpView;
 import io.ribot.app.ui.main.MainPresenter;
 import io.ribot.app.util.DefaultConfig;
+import rx.Observable;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,5 +51,15 @@ public class MainPresenterTest {
         String expectedMessage = RuntimeEnvironment.application
                 .getString(R.string.signed_in_welcome, mSignedInRibot.profile.name.first);
         verify(mMockMainMvpView).showWelcomeMessage(expectedMessage);
+    }
+
+    @Test
+    public void signOutSuccessful() {
+        doReturn(Observable.empty())
+                .when(component.getDataManager())
+                .signOut();
+
+        mMainPresenter.signOut();
+        verify(mMockMainMvpView).onSignedOut();
     }
 }
