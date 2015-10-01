@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/layout_profile_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_profile"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:layout_centerInParent="true"
+            app:civ_border_color="@android:color/transparent"
+            app:civ_border_width="4dp" />
+
+        <TextView
+            android:id="@+id/text_greeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            tools:text="Hi Matt!" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ribot_logo_medium"
+        android:transitionName="@string/transition_ribot_logo" />
+
+</RelativeLayout>

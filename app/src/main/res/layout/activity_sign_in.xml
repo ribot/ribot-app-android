@@ -1,0 +1,61 @@
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:paddingBottom="25dp"
+    android:paddingTop="25dp"
+    tools:context="io.ribot.app.ui.activity.SignInActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_ribot_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="@string/transition_ribot_logo"
+            android:src="@drawable/ribot_logo_large" />
+
+        <TextView
+            android:id="@+id/text_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="13dp"
+            android:text="@string/sign_in_message"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:theme="@style/ProgressWhite"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/button_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:minWidth="200dp"
+        android:padding="20dp"
+        android:text="@string/action_sign_in"
+        android:textSize="18sp"
+        android:theme="@style/BlueButtonStyle"
+        app:layout_marginLeftPercent="8%"
+        app:layout_marginRightPercent="8%" />
+
+</android.support.percent.PercentRelativeLayout>
