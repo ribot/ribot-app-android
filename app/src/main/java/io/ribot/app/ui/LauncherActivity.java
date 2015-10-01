@@ -23,7 +23,7 @@ public class LauncherActivity extends BaseActivity {
         if (mDataManager.getPreferencesHelper().getAccessToken() != null) {
             intent = new Intent(this, MainActivity.class);
         } else {
-            intent = new Intent(this, SignInActivity.class);
+            intent = SignInActivity.newStartIntent(this, false);
         }
         startActivity(intent);
     }

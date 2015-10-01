@@ -15,11 +15,15 @@ import io.ribot.app.test.common.ClearDataRule;
 import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.main.MainActivity;
+import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.mockito.Mockito.doReturn;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -51,6 +55,20 @@ public class MainActivityTest {
         String text = main.getActivity()
                 .getString(R.string.signed_in_welcome, mSignedInRibot.profile.name.first);
         onView(withText(text))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void signOutSuccessful() {
+        doReturn(Observable.empty())
+                .when(component.getDataManager())
+                .signOut();
+
+        openActionBarOverflowOrOptionsMenu(main.getActivity());
+        onView(withText(R.string.action_sign_out))
+                .perform(click());
+        // Check that sign in screen open after sign out.
+        onView(withText(R.string.action_sign_in))
                 .check(matches(isDisplayed()));
     }
 

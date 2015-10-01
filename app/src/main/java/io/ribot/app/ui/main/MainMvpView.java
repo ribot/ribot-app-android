@@ -6,4 +6,6 @@ public interface MainMvpView extends MvpView {
 
     void showWelcomeMessage(String message);
 
+    void onSignedOut();
+
 }
