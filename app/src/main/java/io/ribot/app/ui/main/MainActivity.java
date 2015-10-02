@@ -1,6 +1,7 @@
 package io.ribot.app.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
 import io.ribot.app.ui.base.BaseActivity;
+import io.ribot.app.ui.checkin.CheckInActivity;
 import io.ribot.app.ui.signin.SignInActivity;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
@@ -48,6 +50,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         switch (item.getItemId()) {
             case R.id.action_sign_out:
                 mMainPresenter.signOut();
+                return true;
+            case R.id.action_check_in:
+                startActivity(new Intent(this, CheckInActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

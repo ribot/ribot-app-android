@@ -136,6 +136,7 @@ dependencies {
     compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:percent:$SUPPORT_LIBRARY_VERSION"
+    compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
 
     compile "com.squareup.retrofit:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:converter-gson:$RETROFIT_VERSION"
@@ -147,7 +148,6 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:3.1.0'
-    compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile 'de.hdodenhof:circleimageview:2.0.0'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"

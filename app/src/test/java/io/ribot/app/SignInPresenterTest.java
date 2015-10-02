@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,6 +53,11 @@ public class SignInPresenterTest {
         mSignInPresenter = new SignInPresenter();
         mSignInPresenter.attachView(mMockSignInMvpView);
         mAccount = new Account("ivan@ribot.co.uk", "com.google");
+    }
+
+    @After
+    public void detachView() {
+        mSignInPresenter.detachView();
     }
 
     @Test
