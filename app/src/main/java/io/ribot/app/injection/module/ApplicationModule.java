@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.ribot.app.data.DataManager;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Provide application-level dependencies. Mainly singleton object that can be injected from
@@ -44,6 +45,11 @@ public class ApplicationModule {
     @Provides
     AccountManager provideAccountManager() {
         return AccountManager.get(mApplication);
+    }
+
+    @Provides
+    CompositeSubscription provideCompositeSubscription() {
+        return new CompositeSubscription();
     }
 
 }

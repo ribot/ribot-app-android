@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
+        android:id="@+id/action_check_in"
+        android:icon="@drawable/ic_place"
+        android:title="@string/action_check_in"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_sign_out"
         android:orderInCategory="100"
         android:title="@string/action_sign_out"

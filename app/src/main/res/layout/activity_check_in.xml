@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.checkin.CheckInActivity">
+
+    <EditText
+        android:id="@+id/edit_text_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_marginTop="15dp"
+        android:hint="@string/hint_location_input"
+        android:inputType="textCapWords"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="17sp" />
+
+    <ProgressBar
+        android:id="@+id/progress_check_in"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignEnd="@id/edit_text_location"
+        android:layout_alignTop="@id/edit_text_location"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_venues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_location"
+        android:clipToPadding="false"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        tools:listitem="@layout/item_venue" />
+
+    <ProgressBar
+        android:id="@+id/progress_venues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_check_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/vertical_margin"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginRight="@dimen/horizontal_margin"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:src="@drawable/ic_tick_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>
