@@ -22,6 +22,7 @@ import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -62,8 +63,21 @@ public class DataManagerTest {
         mDataManager.signIn(RuntimeEnvironment.application, account).subscribe(testSubscriber);
         testSubscriber.assertValue(signInResponse.ribot);
         testSubscriber.assertCompleted();
-        // Check that it saves the correct data in preferences after a successful singin.
+        // Check that it saves the correct data in preferences after a successful sign in.
         assertEquals(signInResponse.accessToken, component.getPreferencesHelper().getAccessToken());
         assertEquals(signInResponse.ribot, component.getPreferencesHelper().getSignedInRibot());
+    }
+
+    @Test
+    public void signOutSuccessful() {
+        component.getPreferencesHelper().putSignedInRibot(MockModelFabric.newRibot());
+        component.getPreferencesHelper().putAccessToken(MockModelFabric.generateRandomString());
+
+        TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
+        mDataManager.signOut().subscribe(testSubscriber);
+        testSubscriber.assertCompleted();
+
+        assertNull(component.getPreferencesHelper().getAccessToken());
+        assertNull(component.getPreferencesHelper().getSignedInRibot());
     }
 }

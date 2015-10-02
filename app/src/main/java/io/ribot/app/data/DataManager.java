@@ -21,6 +21,7 @@ import io.ribot.app.injection.component.DaggerDataManagerComponent;
 import io.ribot.app.injection.module.DataManagerModule;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Subscriber;
 import rx.functions.Func1;
 
 public class DataManager {
@@ -90,6 +91,17 @@ public class DataManager {
                         return signInResponse.ribot;
                     }
                 });
+    }
+
+    public Observable<Void> signOut() {
+        return Observable.create(new Observable.OnSubscribe<Void>() {
+            @Override
+            public void call(Subscriber<? super Void> subscriber) {
+                mPreferencesHelper.clear();
+                subscriber.onCompleted();
+            }
+        });
+        // TODO clear database if we use one
     }
 
 
