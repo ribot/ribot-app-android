@@ -34,6 +34,8 @@ import timber.log.Timber;
 
 public class SignInActivity extends BaseActivity implements SignInMvpView {
 
+    private static final String EXTRA_POPUP_MESSAGE =
+            "io.ribot.app.ui.signin.SignInActivity.EXTRA_POPUP_MESSAGE";
     private static final int REQUEST_CODE_PLAY_SERVICES = 1;
     private static final int REQUEST_PERMISSION_GET_ACCOUNTS = 2;
     private static final int REQUEST_CODE_ACCOUNT_PICKER = 3;
@@ -58,6 +60,23 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     @Bind(R.id.image_ribot_logo)
     ImageView mRibotLogo;
 
+    public static Intent newStartIntent(Context context, boolean clearPreviousActivities) {
+        Intent intent = new Intent(context, SignInActivity.class);
+        if (clearPreviousActivities) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+        return intent;
+    }
+
+    // popUpMessage will show on a Dialog as soon as the Activity opens
+    public static Intent newStartIntent(Context context,
+                                         boolean clearPreviousActivities,
+                                         String popUpMessage) {
+        Intent intent = newStartIntent(context, clearPreviousActivities);
+        intent.putExtra(EXTRA_POPUP_MESSAGE, popUpMessage);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +96,11 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
                     .show();
         } else {
             Timber.e("This device doesn't support Play Services");
+        }
+
+        String popUpMessage = getIntent().getStringExtra(EXTRA_POPUP_MESSAGE);
+        if (popUpMessage != null) {
+            DialogFactory.createSimpleOkErrorDialog(this, popUpMessage).show();
         }
     }
 
