@@ -1,2 +1,0 @@
-Version 0.2.0
-* Sign in with your ribot account (without final design)
