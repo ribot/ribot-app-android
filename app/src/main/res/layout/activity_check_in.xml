@@ -33,8 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_text_location"
         android:clipToPadding="false"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
+        android:paddingBottom="@dimen/item_venue_vertical_padding"
+        android:paddingTop="@dimen/item_venue_vertical_padding"
         tools:listitem="@layout/item_venue" />
 
     <ProgressBar

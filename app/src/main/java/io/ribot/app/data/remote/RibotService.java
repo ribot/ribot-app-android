@@ -71,5 +71,4 @@ public interface RibotService {
         public Ribot ribot;
     }
 
-
 }
