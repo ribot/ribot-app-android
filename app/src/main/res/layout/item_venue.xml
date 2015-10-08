@@ -29,8 +29,8 @@
         android:textColor="@color/white"
         android:drawableStart="@drawable/ic_place"
         android:drawablePadding="30dp"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp"
+        android:paddingBottom="@dimen/item_venue_vertical_padding"
+        android:paddingTop="@dimen/item_venue_vertical_padding"
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="Small Batch" />
