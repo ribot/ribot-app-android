@@ -21,6 +21,7 @@
         </activity>
         <activity
             android:name=".ui.main.MainActivity"
+            android:launchMode="singleTask"
             android:label="@string/app_name" />
 
         <activity
@@ -30,6 +31,11 @@
         <activity
             android:name=".ui.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".ui.checkin.CheckInActivity"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:label="@string/title_check_in" />
 
         <meta-data
             android:name="com.google.android.gms.version"

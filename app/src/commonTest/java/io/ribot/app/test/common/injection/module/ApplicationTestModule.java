@@ -11,6 +11,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.test.common.TestDataManager;
+import rx.subscriptions.CompositeSubscription;
 
 import static org.mockito.Mockito.spy;
 
@@ -41,7 +42,6 @@ public class ApplicationTestModule {
         return mMockableDataManager ? spy(testDataManager) : testDataManager;
     }
 
-
     @Provides
     @Singleton
     Bus provideEventBus() {
@@ -51,5 +51,10 @@ public class ApplicationTestModule {
     @Provides
     AccountManager provideAccountManager() {
         return AccountManager.get(mApplication);
+    }
+
+    @Provides
+    CompositeSubscription provideCompositeSubscription() {
+        return new CompositeSubscription();
     }
 }

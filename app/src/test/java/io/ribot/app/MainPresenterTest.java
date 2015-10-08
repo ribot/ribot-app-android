@@ -1,5 +1,6 @@
 package io.ribot.app;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +45,11 @@ public class MainPresenterTest {
         //Emulate a signed in user
         component.getPreferencesHelper().putSignedInRibot(mSignedInRibot);
         mMainPresenter.attachView(mMockMainMvpView);
+    }
+
+    @After
+    public void detachView() {
+        mMainPresenter.detachView();
     }
 
     @Test

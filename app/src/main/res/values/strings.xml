@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">ribot</string>
+    <string name="title_check_in">Check-In</string>
 
     <string name="action_sign_out">Sign Out</string>
     <string name="action_sign_in">Sign In</string>
+    <string name="action_check_in">Check-In</string>
 
     <string name="dialog_action_ok">OK</string>
     <string name="dialog_action_cancel">Cancel</string>
@@ -16,4 +18,7 @@
     <string name="sign_in_message">Welcome!</string>
     <string name="signed_in_welcome">Hi %s\nYou are in!</string>
     <string name="welcome_greetings">Hi %s!</string>
+    <string name="hint_location_input">Type location</string>
+    <string name="manual_check_in_successful">You have checked in at %s!</string>
+    <string name="manual_check_in_error">We cannot check you in at the moment, please try again later.</string>
 </resources>
