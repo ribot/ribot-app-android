@@ -1,9 +1,11 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+        <!-- Designs seem to be using the primary as the accent color, is this right? -->
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
