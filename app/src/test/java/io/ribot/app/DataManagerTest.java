@@ -194,7 +194,7 @@ public class DataManagerTest {
     @Test
     public void getTodayLatestCheckInWhenLatestWasBeforeToday() {
         CheckIn checkIn = MockModelFabric.newCheckInWithVenue();
-        checkIn.date.setTime(System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS);
+        checkIn.checkedInDate.setTime(System.currentTimeMillis() - DateUtils.DAY_IN_MILLIS);
         mDataManager.getPreferencesHelper().putLatestCheckIn(checkIn);
 
         TestSubscriber<CheckIn> testSubscriber = new TestSubscriber<>();

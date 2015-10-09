@@ -7,7 +7,7 @@ public class CheckIn {
     public Venue venue;
     //Location name. Only to be used if not attached to a specific venue.
     public String label;
-    public Date date;
+    public Date checkedInDate;
 
     public boolean hasVenue() {
         return venue != null && venue.label != null;
