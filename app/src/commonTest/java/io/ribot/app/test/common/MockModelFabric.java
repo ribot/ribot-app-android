@@ -61,7 +61,7 @@ public class MockModelFabric {
     public static CheckIn newCheckInWithVenue() {
         CheckIn checkIn = new CheckIn();
         checkIn.id = generateRandomString();
-        checkIn.date = new Date();
+        checkIn.checkedInDate = new Date();
         checkIn.venue = newVenue();
         return checkIn;
     }
@@ -69,7 +69,7 @@ public class MockModelFabric {
     public static CheckIn newCheckInWithLabel() {
         CheckIn checkIn = new CheckIn();
         checkIn.id = generateRandomString();
-        checkIn.date = new Date();
+        checkIn.checkedInDate = new Date();
         checkIn.label = generateRandomString();
         return checkIn;
     }

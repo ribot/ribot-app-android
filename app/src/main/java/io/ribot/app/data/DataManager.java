@@ -7,7 +7,6 @@ import android.os.Looper;
 
 import com.squareup.otto.Bus;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -161,8 +160,6 @@ public class DataManager {
                 .doOnNext(new Action1<CheckIn>() {
                     @Override
                     public void call(CheckIn checkIn) {
-                        // TODO remove this line once the API returns the date
-                        checkIn.date = new Date();
                         mPreferencesHelper.putLatestCheckIn(checkIn);
                     }
                 });
@@ -176,7 +173,7 @@ public class DataManager {
                 .filter(new Func1<CheckIn, Boolean>() {
                     @Override
                     public Boolean call(CheckIn checkIn) {
-                        return DateUtil.isToday(checkIn.date.getTime());
+                        return DateUtil.isToday(checkIn.checkedInDate.getTime());
                     }
                 });
     }
