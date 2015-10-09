@@ -68,7 +68,7 @@ android {
             * replace proguard-android.txt with proguard-android-optimize.txt but make sure you
             * test thoroughly if you go this route as app may become unstable.
             */
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         }
