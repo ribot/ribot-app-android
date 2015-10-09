@@ -27,9 +27,9 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         testInstrumentationRunner 'io.ribot.app.util.UnlockDeviceTestRunner'
-        versionCode 2001
+        versionCode 3000
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
-        versionName '0.2.1'
+        versionName '0.3.0'
 
         def externalVersionNameSuffix = System.getenv('VERSION_NAME_SUFFIX');
         if (externalVersionNameSuffix != null) versionName += '.' + externalVersionNameSuffix
@@ -68,7 +68,7 @@ android {
             * replace proguard-android.txt with proguard-android-optimize.txt but make sure you
             * test thoroughly if you go this route as app may become unstable.
             */
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         }
