@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+            <io.ribot.app.ui.widget.GridRecyclerView
+                android:id="@+id/recycler_view_team"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="24dp"
+                android:clipToPadding="false"
+                android:columnWidth="@dimen/team_column_width"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/text_no_ribots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/message_no_ribots"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_body"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -8,5 +8,5 @@ import android.content.Context;
  * that then usually will be implemented by an Activity (or Fragment).
  */
 public interface MvpView {
-    Context getContext();
+    Context getViewContext();
 }

@@ -49,7 +49,7 @@ public class SignInPresenterTest {
     @Before
     public void setUp() {
         mMockSignInMvpView = mock(SignInMvpView.class);
-        when(mMockSignInMvpView.getContext()).thenReturn(RuntimeEnvironment.application);
+        when(mMockSignInMvpView.getViewContext()).thenReturn(RuntimeEnvironment.application);
         mSignInPresenter = new SignInPresenter();
         mSignInPresenter.attachView(mMockSignInMvpView);
         mAccount = new Account("ivan@ribot.co.uk", "com.google");

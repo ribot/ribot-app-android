@@ -8,7 +8,14 @@
     <dimen name="text_title">20sp</dimen>
     <dimen name="text_large_body">18sp</dimen>
     <dimen name="text_body">16sp</dimen>
+    <dimen name="text_body_big">17sp</dimen>
     <dimen name="text_small_body">14sp</dimen>
+    <dimen name="text_tiny_body">12sp</dimen>
     <dimen name="item_venue_vertical_padding">15dp</dimen>
+
+    <dimen name="team_image_medium">75dp</dimen>
+
+    <dimen name="team_item_margin">8dp</dimen>
+    <dimen name="team_column_width">100dp</dimen>
 
 </resources>

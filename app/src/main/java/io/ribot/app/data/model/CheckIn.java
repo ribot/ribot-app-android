@@ -8,6 +8,7 @@ public class CheckIn {
     //Location name. Only to be used if not attached to a specific venue.
     public String label;
     public Date checkedInDate;
+    public boolean isCheckedOut;
 
     public boolean hasVenue() {
         return venue != null && venue.label != null;
@@ -27,9 +28,12 @@ public class CheckIn {
 
         CheckIn checkIn = (CheckIn) o;
 
+        if (isCheckedOut != checkIn.isCheckedOut) return false;
         if (id != null ? !id.equals(checkIn.id) : checkIn.id != null) return false;
         if (venue != null ? !venue.equals(checkIn.venue) : checkIn.venue != null) return false;
-        return !(label != null ? !label.equals(checkIn.label) : checkIn.label != null);
+        if (label != null ? !label.equals(checkIn.label) : checkIn.label != null) return false;
+        return !(checkedInDate != null
+                ? !checkedInDate.equals(checkIn.checkedInDate) : checkIn.checkedInDate != null);
 
     }
 
@@ -38,6 +42,9 @@ public class CheckIn {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (venue != null ? venue.hashCode() : 0);
         result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (checkedInDate != null ? checkedInDate.hashCode() : 0);
+        result = 31 * result + (isCheckedOut ? 1 : 0);
         return result;
     }
+
 }

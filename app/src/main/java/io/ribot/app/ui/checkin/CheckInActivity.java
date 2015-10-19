@@ -88,7 +88,7 @@ public class CheckInActivity extends BaseActivity
     /***** MVP View methods implementation *****/
 
     @Override
-    public Context getContext() {
+    public Context getViewContext() {
         return this;
     }
 

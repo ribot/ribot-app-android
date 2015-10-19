@@ -50,6 +50,14 @@ public class MockModelFabric {
         return venue;
     }
 
+    public static List<Ribot> newRibotList(int size) {
+        ArrayList<Ribot> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(newRibot());
+        }
+        return list;
+    }
+
     public static List<Venue> newVenueList(int size) {
         ArrayList<Venue> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
