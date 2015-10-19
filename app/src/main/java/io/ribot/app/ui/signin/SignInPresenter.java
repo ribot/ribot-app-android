@@ -28,7 +28,7 @@ public class SignInPresenter implements Presenter<SignInMvpView> {
     @Override
     public void attachView(SignInMvpView mvpView) {
         this.mMvpView = mvpView;
-        RibotApplication.get(mMvpView.getContext()).getComponent().inject(this);
+        RibotApplication.get(mMvpView.getViewContext()).getComponent().inject(this);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class SignInPresenter implements Presenter<SignInMvpView> {
         Timber.i("Starting sign in with account " + account.name);
         mMvpView.showProgress(true);
         mMvpView.setSignInButtonEnabled(false);
-        mSubscription = mDataManager.signIn(mMvpView.getContext(), account)
+        mSubscription = mDataManager.signIn(mMvpView.getViewContext(), account)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(mDataManager.getSubscribeScheduler())
                 .subscribe(new Subscriber<Ribot>() {
@@ -63,10 +63,10 @@ public class SignInPresenter implements Presenter<SignInMvpView> {
                             if (NetworkUtil.isHttpStatusCode(e, 403)) {
                                 // Google Auth was successful, but the user does not have a ribot
                                 // profile set up.
-                                mMvpView.showError(mMvpView.getContext().getString(
+                                mMvpView.showError(mMvpView.getViewContext().getString(
                                         R.string.error_ribot_profile_not_found, account.name));
                             } else {
-                                mMvpView.showError(mMvpView.getContext()
+                                mMvpView.showError(mMvpView.getViewContext()
                                         .getString(R.string.error_sign_in));
                             }
                         }

@@ -94,6 +94,21 @@ public class DataManagerTest {
     }
 
     @Test
+    public void getRibots() {
+        List<Ribot> ribots = MockModelFabric.newRibotList(17);
+
+        doReturn(Observable.just(ribots))
+                .when(component.getMockRibotService())
+                .getRibots(mAuthorization, "checkins");
+
+        TestSubscriber<List<Ribot>> testSubscriber = new TestSubscriber<>();
+        mDataManager.getRibots().subscribe(testSubscriber);
+        testSubscriber.assertCompleted();
+        testSubscriber.assertValueCount(1);
+        testSubscriber.assertValue(ribots);
+    }
+
+    @Test
     public void getVenuesWhenEmptyCache() {
         List<Venue> venuesApi = MockModelFabric.newVenueList(10);
         stubRibotServiceGetVenues(Observable.just(venuesApi));
@@ -208,4 +223,5 @@ public class DataManagerTest {
                 .when(component.getMockRibotService())
                 .getVenues(mAuthorization);
     }
+
 }

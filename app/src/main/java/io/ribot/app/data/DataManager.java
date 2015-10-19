@@ -117,6 +117,11 @@ public class DataManager {
         // TODO clear database if we use one
     }
 
+    public Observable<List<Ribot>> getRibots() {
+        String auth = RibotService.Util.buildAuthorization(mPreferencesHelper.getAccessToken());
+        return mRibotService.getRibots(auth, "checkins");
+    }
+
     /**
      * Retrieve list of venues. Behaviour:
      * 1. Return cached venues (empty list if none is cached)

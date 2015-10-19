@@ -6,6 +6,7 @@ import io.ribot.app.injection.scope.PerActivity;
 import io.ribot.app.ui.checkin.CheckInPresenter;
 import io.ribot.app.ui.main.MainPresenter;
 import io.ribot.app.ui.signin.SignInPresenter;
+import io.ribot.app.ui.team.TeamPresenter;
 
 /**
  * Provides extensions of Presenter generally to activities
@@ -29,6 +30,12 @@ public class PresentersModule {
     @PerActivity
     CheckInPresenter providesCheckInPresenter() {
         return new CheckInPresenter();
+    }
+
+    @Provides
+    @PerActivity
+    TeamPresenter providesTeamPresenter() {
+        return new TeamPresenter();
     }
 
 }

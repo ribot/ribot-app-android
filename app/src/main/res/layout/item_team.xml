@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="23dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circle_image_profile_main"
+        android:layout_width="@dimen/team_image_medium"
+        android:layout_height="@dimen/team_image_medium"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/profile_placeholder_large"
+        app:civ_border_width="3dp"
+        app:civ_border_color="@color/white"/>
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/circle_image_profile_main"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_body_big"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/text_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Desks"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_tiny_body"/>
+
+</RelativeLayout>

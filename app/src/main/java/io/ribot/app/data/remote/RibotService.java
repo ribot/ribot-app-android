@@ -16,6 +16,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
+import retrofit.http.Query;
 import rx.Observable;
 
 public interface RibotService {
@@ -25,6 +26,10 @@ public interface RibotService {
 
     @POST("auth/sign-in")
     Observable<SignInResponse> signIn(@Body SignInRequest signInRequest);
+
+    @GET("ribots")
+    Observable<List<Ribot>> getRibots(@Header(AUTH_HEADER) String authorization,
+                                      @Query("embed") String embed);
 
     @GET("venues")
     Observable<List<Venue>> getVenues(@Header(AUTH_HEADER) String authorization);

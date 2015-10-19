@@ -33,7 +33,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
     @Override
     public void attachView(CheckInMvpView mvpView) {
         mMvpView = mvpView;
-        RibotApplication.get(mMvpView.getContext()).getComponent().inject(this);
+        RibotApplication.get(mMvpView.getViewContext()).getComponent().inject(this);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     public void onError(Throwable e) {
                         Timber.e("Error checking in manually " + e);
                         showCheckInProgress(false, checkInRequest);
-                        String errorMsg = mMvpView.getContext()
+                        String errorMsg = mMvpView.getViewContext()
                                 .getString(R.string.manual_check_in_error);
                         mMvpView.showCheckInFailed(errorMsg);
                         // if it's a label (typing) request, we make sure we enable the button again
