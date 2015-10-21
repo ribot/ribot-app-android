@@ -118,7 +118,7 @@ play {
 
 dependencies {
     final PLAY_SERVICES_VERSION = '8.1.0'
-    final SUPPORT_LIBRARY_VERSION = '23.0.1'
+    final SUPPORT_LIBRARY_VERSION = '23.1.0'
     final RETROFIT_VERSION = '2.0.0-beta2'
     final DAGGER_VERSION = '2.0.1'
     final DEXMAKER_VERSION = '1.4'

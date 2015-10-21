@@ -20,7 +20,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
-    protected ActivityComponent activityComponent() {
+    public ActivityComponent activityComponent() {
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
                     .applicationComponent(RibotApplication.get(this).getComponent())

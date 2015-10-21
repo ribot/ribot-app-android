@@ -39,7 +39,7 @@ public class MainPresenterTest {
     @Before
     public void setUp() {
         mMockMainMvpView = mock(MainMvpView.class);
-        when(mMockMainMvpView.getContext()).thenReturn(RuntimeEnvironment.application);
+        when(mMockMainMvpView.getViewContext()).thenReturn(RuntimeEnvironment.application);
         mMainPresenter = new MainPresenter();
         mSignedInRibot = MockModelFabric.newRibot();
         //Emulate a signed in user
@@ -50,13 +50,6 @@ public class MainPresenterTest {
     @After
     public void detachView() {
         mMainPresenter.detachView();
-    }
-
-    @Test
-    public void checkShowWelcomeMessage() {
-        String expectedMessage = RuntimeEnvironment.application
-                .getString(R.string.signed_in_welcome, mSignedInRibot.profile.name.first);
-        verify(mMockMainMvpView).showWelcomeMessage(expectedMessage);
     }
 
     @Test

@@ -7,6 +7,7 @@ import io.ribot.app.ui.LauncherActivity;
 import io.ribot.app.ui.checkin.CheckInActivity;
 import io.ribot.app.ui.main.MainActivity;
 import io.ribot.app.ui.signin.SignInActivity;
+import io.ribot.app.ui.team.TeamFragment;
 
 /**
  * This component inject dependencies to all Activities across the application
@@ -19,5 +20,6 @@ public interface ActivityComponent {
     void inject(LauncherActivity launcherActivity);
     void inject(MainActivity mainActivity);
     void inject(CheckInActivity checkInActivity);
+    void inject(TeamFragment teamFragment);
 }
 

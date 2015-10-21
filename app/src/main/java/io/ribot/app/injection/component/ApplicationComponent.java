@@ -13,6 +13,7 @@ import io.ribot.app.injection.module.ApplicationModule;
 import io.ribot.app.ui.checkin.CheckInPresenter;
 import io.ribot.app.ui.main.MainPresenter;
 import io.ribot.app.ui.signin.SignInPresenter;
+import io.ribot.app.ui.team.TeamPresenter;
 import rx.subscriptions.CompositeSubscription;
 
 @Singleton
@@ -22,6 +23,7 @@ public interface ApplicationComponent {
     void inject(SignInPresenter signInPresenter);
     void inject(MainPresenter mainPresenter);
     void inject(CheckInPresenter checkInPresenter);
+    void inject(TeamPresenter teamPresenter);
 
     Application application();
     DataManager dataManager();
