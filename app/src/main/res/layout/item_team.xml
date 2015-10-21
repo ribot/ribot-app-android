@@ -4,9 +4,7 @@
                 android:id="@+id/layout_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="23dp"
-                android:paddingLeft="@dimen/team_item_padding"
-                android:paddingRight="@dimen/team_item_padding">
+                android:padding="@dimen/team_item_padding">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_image_profile_main"

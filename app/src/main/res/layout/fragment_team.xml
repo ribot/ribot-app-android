@@ -11,10 +11,7 @@
                 android:id="@+id/recycler_view_team"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="24dp"
-                android:paddingBottom="24dp"
-                android:paddingLeft="@dimen/team_item_padding"
-                android:paddingRight="@dimen/team_item_padding"
+                android:padding="@dimen/team_item_padding"
                 android:clipToPadding="false"
                 android:columnWidth="@dimen/team_column_width"/>
 
