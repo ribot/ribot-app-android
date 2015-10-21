@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
 import io.ribot.app.ui.base.BaseActivity;
@@ -20,9 +18,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
     @Inject
     MainPresenter mMainPresenter;
-
-    @Bind(R.id.textView)
-    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +57,8 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     /***** MVP View methods implementation *****/
 
     @Override
-    public Context getContext() {
+    public Context getViewContext() {
         return this;
-    }
-
-    @Override
-    public void showWelcomeMessage(String message) {
-        mTextView.setText(message);
     }
 
     @Override

@@ -32,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static io.ribot.app.util.CustomMatchers.hasCompoundDrawableRelative;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 
 public class CheckInActivityTest {
@@ -112,7 +113,7 @@ public class CheckInActivityTest {
         checkIn.label = label;
         doReturn(Observable.just(checkIn))
                 .when(component.getDataManager())
-                .checkIn(CheckInRequest.fromLabel(label));
+                .checkIn(any(CheckInRequest.class));
 
         onView(withId(R.id.edit_text_location))
                 .check(matches(hasCompoundDrawableRelative(false, false, false, false)))
@@ -129,7 +130,7 @@ public class CheckInActivityTest {
         String label = "The cow";
         doReturn(Observable.error(new RuntimeException()))
                 .when(component.getDataManager())
-                .checkIn(CheckInRequest.fromLabel(label));
+                .checkIn(any(CheckInRequest.class));
 
         onView(withId(R.id.edit_text_location))
                 .perform(typeText(label));

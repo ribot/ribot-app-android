@@ -6,19 +6,32 @@
     <string name="action_sign_in">Sign In</string>
     <string name="action_check_in">Check-In</string>
 
-    <string name="dialog_action_ok">OK</string>
-    <string name="dialog_action_cancel">Cancel</string>
-    <string name="dialog_error_title">Sorry</string>
+    <!-- Sign in -->
 
     <string name="text_ribot_account">Select or add your ribot.co.uk account</string>
-    <string name="title_permissions">Permissions</string>
-    <string name="permission_not_accepted_get_accounts">Sorry, you cannot sign in without accepting this permission. We need it to get your ribot account from your phone.</string>
     <string name="error_ribot_profile_not_found">It looks like the account %s doesn\'t have a ribot profile yet. Make sure you are using your ribot.co.uk account.</string>
     <string name="error_sign_in">We can\'t sign you in at the moment. Please try again later.</string>
+    <string name="title_permissions">Permissions</string>
+    <string name="permission_not_accepted_get_accounts">Sorry, you cannot sign in without accepting this permission. We need it to get your ribot account from your phone.</string>
     <string name="sign_in_message">Welcome!</string>
-    <string name="signed_in_welcome">Hi %s\nYou are in!</string>
     <string name="welcome_greetings">Hi %s!</string>
     <string name="hint_location_input">Type location</string>
     <string name="manual_check_in_successful">You have checked in at %s!</string>
     <string name="manual_check_in_error">We cannot check you in at the moment, please try again later.</string>
+
+    <!-- Main Activity -->
+
+    <string name="message_no_ribots">No ribots to display</string>
+    <string name="text_checked_out">Out</string>
+
+    <!-- Dialogs -->
+
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_error_title">Sorry</string>
+
+    <!-- Error messages -->
+
+    <string name="error_loading_ribots">Sorry, there was an error loading the ribots!</string>
+
 </resources>

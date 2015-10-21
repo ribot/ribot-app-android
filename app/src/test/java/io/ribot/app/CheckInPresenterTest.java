@@ -44,7 +44,7 @@ public class CheckInPresenterTest {
     @Before
     public void setUp() {
         mMockMvpView = mock(CheckInMvpView.class);
-        when(mMockMvpView.getContext()).thenReturn(RuntimeEnvironment.application);
+        when(mMockMvpView.getViewContext()).thenReturn(RuntimeEnvironment.application);
         mPresenter = new CheckInPresenter();
         mPresenter.attachView(mMockMvpView);
     }

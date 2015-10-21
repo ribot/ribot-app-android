@@ -205,7 +205,7 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     }
 
     @Override
-    public Context getContext() {
+    public Context getViewContext() {
         return this;
     }
 
