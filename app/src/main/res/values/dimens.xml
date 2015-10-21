@@ -15,7 +15,7 @@
 
     <dimen name="team_image_medium">75dp</dimen>
 
-    <dimen name="team_item_margin">8dp</dimen>
+    <dimen name="team_item_padding">12dp</dimen>
     <dimen name="team_column_width">100dp</dimen>
 
 </resources>

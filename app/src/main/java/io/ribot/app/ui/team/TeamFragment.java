@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -37,6 +38,9 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     @Bind(R.id.text_no_ribots)
     TextView mNoRibotsText;
 
+    @Bind(R.id.progress)
+    ProgressBar mProgress;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -59,8 +63,8 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         mTeamPresenter.loadRibots();
     }
 
@@ -80,6 +84,11 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     @Override
     public void showRibotProgress(boolean show) {
         mSwipeRefreshContainer.setRefreshing(show);
+        if (show && mRibotAdapter.getItemCount() == 0) {
+            mProgress.setVisibility(View.VISIBLE);
+        } else {
+            mProgress.setVisibility(View.GONE);
+        }
     }
 
     @Override
