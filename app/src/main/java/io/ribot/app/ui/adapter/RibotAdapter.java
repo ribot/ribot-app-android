@@ -43,6 +43,8 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
         holder.name.setText(ribot.profile.name.first);
         Picasso.with(mContext)
                 .load(ribot.profile.avatar)
+                .fit()
+                .centerCrop()
                 .placeholder(R.drawable.profile_placeholder_large)
                 .into(holder.avatar);
         CheckIn latestCheckIn = ribot.getLatestCheckIn();
