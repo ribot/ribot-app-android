@@ -3,17 +3,20 @@ package io.ribot.app.test.common;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import io.ribot.app.data.model.CheckIn;
+import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.Name;
 import io.ribot.app.data.model.Profile;
+import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
 
 public class MockModelFabric {
 
-    public static String generateRandomString() {
+    public static String randomString() {
         return UUID.randomUUID().toString();
     }
 
@@ -28,7 +31,7 @@ public class MockModelFabric {
         profile.name = newName();
         profile.email = profile.name.first + "@ribot.co.uk";
         profile.avatar = "https://ribot.io/" + profile.name.first + "/avatar";
-        profile.bio = generateRandomString();
+        profile.bio = randomString();
         profile.dateOfBirth = new Date();
         profile.hexColor = "#FFFFFF";
         return profile;
@@ -36,14 +39,14 @@ public class MockModelFabric {
 
     public static Name newName() {
         Name name = new Name();
-        name.first = generateRandomString();
-        name.last = generateRandomString();
+        name.first = randomString();
+        name.last = randomString();
         return name;
     }
 
     public static Venue newVenue() {
         Venue venue = new Venue();
-        venue.id = generateRandomString();
+        venue.id = randomString();
         venue.label = venue.id + "_Name";
         venue.latitude = 10f;
         venue.longitude = 20f;
@@ -68,7 +71,7 @@ public class MockModelFabric {
 
     public static CheckIn newCheckInWithVenue() {
         CheckIn checkIn = new CheckIn();
-        checkIn.id = generateRandomString();
+        checkIn.id = randomString();
         checkIn.checkedInDate = new Date();
         checkIn.venue = newVenue();
         return checkIn;
@@ -76,10 +79,37 @@ public class MockModelFabric {
 
     public static CheckIn newCheckInWithLabel() {
         CheckIn checkIn = new CheckIn();
-        checkIn.id = generateRandomString();
+        checkIn.id = randomString();
         checkIn.checkedInDate = new Date();
-        checkIn.label = generateRandomString();
+        checkIn.label = randomString();
         return checkIn;
+    }
+
+    public static RegisteredBeacon newRegisteredBeacon() {
+        Random random = new Random();
+        RegisteredBeacon beacon = new RegisteredBeacon();
+        beacon.id = randomString();
+        beacon.uuid = randomString();
+        beacon.major = random.nextInt(20000);
+        beacon.minor = random.nextInt(20000);
+        return beacon;
+    }
+
+    public static List<RegisteredBeacon> newRegisteredBeaconList(int size) {
+        List<RegisteredBeacon> beacons = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            beacons.add(newRegisteredBeacon());
+        }
+        return beacons;
+    }
+
+    public static Encounter newEncounter() {
+        Encounter encounter = new Encounter();
+        encounter.id = randomString();
+        encounter.encounterDate = new Date();
+        encounter.checkIn = newCheckInWithVenue();
+        encounter.beacon = newRegisteredBeacon();
+        return encounter;
     }
 
 }

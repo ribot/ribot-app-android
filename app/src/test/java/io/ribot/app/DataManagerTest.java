@@ -2,6 +2,7 @@ package io.ribot.app;
 
 import android.accounts.Account;
 import android.content.Context;
+import android.database.Cursor;
 import android.text.format.DateUtils;
 
 import org.junit.Before;
@@ -16,9 +17,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.ribot.app.data.BeaconNotRegisteredException;
 import io.ribot.app.data.DataManager;
+import io.ribot.app.data.local.Db;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;
+import io.ribot.app.data.model.Encounter;
+import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
 import io.ribot.app.data.remote.RibotService;
@@ -32,6 +37,7 @@ import rx.observers.TestSubscriber;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 
@@ -51,7 +57,7 @@ public class DataManagerTest {
     @Before
     public void setUp() {
         mDataManager = component.getDataManager();
-        String apiAccessToken = MockModelFabric.generateRandomString();
+        String apiAccessToken = MockModelFabric.randomString();
         mAuthorization = RibotService.Util.buildAuthorization(apiAccessToken);
         component.getPreferencesHelper().putAccessToken(apiAccessToken);
     }
@@ -61,9 +67,9 @@ public class DataManagerTest {
         // Stub GoogleAuthHelper and RibotService mocks
         RibotService.SignInResponse signInResponse = new RibotService.SignInResponse();
         signInResponse.ribot = MockModelFabric.newRibot();
-        signInResponse.accessToken = MockModelFabric.generateRandomString();
+        signInResponse.accessToken = MockModelFabric.randomString();
         Account account = new Account("ivan@ribot.co.uk", "google.com");
-        String googleAccessCode = MockModelFabric.generateRandomString();
+        String googleAccessCode = MockModelFabric.randomString();
         doReturn(Observable.just(googleAccessCode))
                 .when(component.getMockGoogleAuthHelper())
                 .retrieveAuthTokenAsObservable(any(Context.class), eq(account));
@@ -81,9 +87,9 @@ public class DataManagerTest {
     }
 
     @Test
-    public void signOutSuccessful() {
+    public void signOutClearSharedPreferences() {
         component.getPreferencesHelper().putSignedInRibot(MockModelFabric.newRibot());
-        component.getPreferencesHelper().putAccessToken(MockModelFabric.generateRandomString());
+        component.getPreferencesHelper().putAccessToken(MockModelFabric.randomString());
 
         TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
         mDataManager.signOut().subscribe(testSubscriber);
@@ -91,6 +97,22 @@ public class DataManagerTest {
 
         assertNull(component.getPreferencesHelper().getAccessToken());
         assertNull(component.getPreferencesHelper().getSignedInRibot());
+    }
+
+    @Test
+    public void signOutClearDatabase() {
+        RegisteredBeacon beacon = MockModelFabric.newRegisteredBeacon();
+        component.getDatabaseHelper().getBriteDb()
+                .insert(Db.BeaconTable.TABLE_NAME, Db.BeaconTable.toContentValues(beacon));
+
+        TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
+        mDataManager.signOut().subscribe(testSubscriber);
+        testSubscriber.assertCompleted();
+
+        Cursor cursor = component.getDatabaseHelper()
+                .getBriteDb().query("SELECT * FROM " + Db.BeaconTable.TABLE_NAME);
+        assertEquals(0, cursor.getCount());
+        cursor.close();
     }
 
     @Test
@@ -167,7 +189,7 @@ public class DataManagerTest {
     @Test
     public void checkInSuccessful() {
         CheckIn checkIn = MockModelFabric.newCheckInWithLabel();
-        CheckInRequest request = CheckInRequest.fromLabel(MockModelFabric.generateRandomString());
+        CheckInRequest request = CheckInRequest.fromLabel(MockModelFabric.randomString());
         doReturn(Observable.just(checkIn))
                 .when(component.getMockRibotService())
                 .checkIn(mAuthorization, request);
@@ -182,7 +204,7 @@ public class DataManagerTest {
 
     @Test
     public void checkInFail() {
-        CheckInRequest request = CheckInRequest.fromLabel(MockModelFabric.generateRandomString());
+        CheckInRequest request = CheckInRequest.fromLabel(MockModelFabric.randomString());
         doReturn(Observable.error(new RuntimeException()))
                 .when(component.getMockRibotService())
                 .checkIn(mAuthorization, request);
@@ -218,10 +240,157 @@ public class DataManagerTest {
         testSubscriber.assertNoValues();
     }
 
+    @Test
+    public void performBeaconEncounter() {
+        String beaconId = MockModelFabric.randomString();
+        Encounter encounter = MockModelFabric.newEncounter();
+        doReturn(Observable.just(encounter))
+                .when(component.getMockRibotService())
+                .performBeaconEncounter(anyString(), eq(beaconId));
+
+        TestSubscriber<Encounter> testSubscriber = new TestSubscriber<>();
+        mDataManager.performBeaconEncounter(beaconId).subscribe(testSubscriber);
+
+        testSubscriber.assertCompleted();
+        testSubscriber.assertValue(encounter);
+
+        assertEquals(encounter.beacon,
+                mDataManager.getPreferencesHelper().getLatestEncounterBeacon());
+        assertEquals(encounter.encounterDate,
+                mDataManager.getPreferencesHelper().getLatestEncounterDate());
+    }
+
+    @Test
+    public void performBeaconEncounterFails() {
+        String beaconId = MockModelFabric.randomString();
+        doReturn(Observable.error(new RuntimeException()))
+                .when(component.getMockRibotService())
+                .performBeaconEncounter(anyString(), eq(beaconId));
+
+        TestSubscriber<Encounter> testSubscriber = new TestSubscriber<>();
+        mDataManager.performBeaconEncounter(beaconId).subscribe(testSubscriber);
+
+        testSubscriber.assertError(RuntimeException.class);
+        testSubscriber.assertNoValues();
+
+        assertNull(mDataManager.getPreferencesHelper().getLatestEncounterBeacon());
+        assertNull(mDataManager.getPreferencesHelper().getLatestEncounterDate());
+    }
+
+    @Test
+    public void performBeaconEncounterWithUuidMajorAndMinor() {
+        RegisteredBeacon registeredBeacon = MockModelFabric.newRegisteredBeacon();
+        component.getDatabaseHelper()
+                .setRegisteredBeacons(Collections.singletonList(registeredBeacon)).subscribe();
+
+        Encounter encounter = MockModelFabric.newEncounter();
+        doReturn(Observable.just(encounter))
+                .when(component.getMockRibotService())
+                .performBeaconEncounter(anyString(), eq(registeredBeacon.id));
+
+        TestSubscriber<Encounter> testSubscriber = new TestSubscriber<>();
+        mDataManager.performBeaconEncounter(registeredBeacon.uuid,
+                registeredBeacon.major, registeredBeacon.minor).subscribe(testSubscriber);
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertValue(encounter);
+        testSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void performBeaconEncounterFailWithBeaconNotRegistered() {
+        //This beacon is not saved in the local database so the encounter should fail
+        RegisteredBeacon registeredBeacon = MockModelFabric.newRegisteredBeacon();
+
+        Encounter encounter = MockModelFabric.newEncounter();
+        doReturn(Observable.just(encounter))
+                .when(component.getMockRibotService())
+                .performBeaconEncounter(anyString(), eq(registeredBeacon.id));
+
+        TestSubscriber<Encounter> testSubscriber = new TestSubscriber<>();
+        mDataManager.performBeaconEncounter(registeredBeacon.uuid,
+                registeredBeacon.major, registeredBeacon.minor).subscribe(testSubscriber);
+        testSubscriber.assertError(BeaconNotRegisteredException.class);
+    }
+
+    @Test
+    public void syncRegisteredBeacons() {
+        List<RegisteredBeacon> registeredBeacons = MockModelFabric.newRegisteredBeaconList(3);
+        doReturn(Observable.just(registeredBeacons))
+                .when(component.getMockRibotService())
+                .getRegisteredBeacons(anyString());
+
+        TestSubscriber<Void> testSubscriber = new TestSubscriber<>();
+        mDataManager.syncRegisteredBeacons().subscribe(testSubscriber);
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertCompleted();
+
+        Cursor cursor = component.getDatabaseHelper().getBriteDb()
+                .query("SELECT * FROM " + Db.BeaconTable.TABLE_NAME);
+        assertEquals(registeredBeacons.size(), cursor.getCount());
+        cursor.close();
+    }
+
+    @Test
+    public void checkOutCompletesAndEmitsCheckIn() {
+        Encounter encounter = MockModelFabric.newEncounter();
+        CheckIn checkIn = encounter.checkIn;
+        component.getPreferencesHelper().putLatestEncounter(encounter);
+
+        checkIn.isCheckedOut = true;
+        stubRibotServiceUpdateCheckIn(checkIn);
+
+        TestSubscriber<CheckIn> testSubscriber = new TestSubscriber<>();
+        mDataManager.checkOut(checkIn.id).subscribe(testSubscriber);
+        testSubscriber.assertCompleted();
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertValue(checkIn);
+    }
+
+    @Test
+    public void checkOutSuccessfulUpdatesLatestCheckIn() {
+        Encounter encounter = MockModelFabric.newEncounter();
+        CheckIn checkIn = encounter.checkIn;
+        checkIn.isCheckedOut = false;
+        component.getPreferencesHelper().putLatestEncounter(encounter);
+
+        checkIn.isCheckedOut = true; // api would return isCheckedOut true if successful
+        stubRibotServiceUpdateCheckIn(checkIn);
+
+        mDataManager.checkOut(checkIn.id).subscribe();
+
+        assertEquals(checkIn, component.getPreferencesHelper().getLatestCheckIn());
+    }
+
+    @Test
+    public void checkOutSuccessfulClearsLatestEncounter() {
+        Encounter encounter = MockModelFabric.newEncounter();
+        CheckIn checkIn = encounter.checkIn;
+        checkIn.isCheckedOut = false;
+        component.getPreferencesHelper().putLatestEncounter(encounter);
+
+        checkIn.isCheckedOut = true; // api would return isCheckedOut true if successful
+        stubRibotServiceUpdateCheckIn(checkIn);
+
+        mDataManager.checkOut(checkIn.id).subscribe();
+
+        assertNull(component.getPreferencesHelper().getLatestEncounterDate());
+        assertNull(component.getPreferencesHelper().getLatestEncounterCheckInId());
+        assertNull(component.getPreferencesHelper().getLatestEncounterBeacon());
+    }
+
+    /*********************** Helper methods ***********************/
+
     private void stubRibotServiceGetVenues(Observable<List<Venue>> observable) {
         doReturn(observable)
                 .when(component.getMockRibotService())
                 .getVenues(mAuthorization);
+    }
+
+    private void stubRibotServiceUpdateCheckIn(CheckIn checkIn) {
+        doReturn(Observable.just(checkIn))
+                .when(component.getMockRibotService())
+                .updateCheckIn(anyString(), eq(checkIn.id),
+                        any(RibotService.UpdateCheckInRequest.class));
     }
 
 }

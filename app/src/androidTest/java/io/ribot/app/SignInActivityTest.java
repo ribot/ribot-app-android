@@ -56,7 +56,7 @@ public class SignInActivityTest {
 
     @Test
     public void checkViewsDisplay() {
-        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
 
         onView(withId(R.id.button_sign_in))
                 .check(matches(isDisplayed()));
@@ -68,7 +68,7 @@ public class SignInActivityTest {
 
     @Test
     public void signInSuccessfulNavigatesToWelcome() {
-        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
         stubAccountPickerIntent();
 
         // Stub sign in method in the DataManager
@@ -88,7 +88,7 @@ public class SignInActivityTest {
 
     @Test
     public void signInFailsWithGeneralError() {
-        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
         stubAccountPickerIntent();
 
         // Stub an error when calling sign in
@@ -104,7 +104,7 @@ public class SignInActivityTest {
 
     @Test
     public void signInFailsWithProfileNotFound() {
-        main.launchActivity(SignInActivity.newStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
         stubAccountPickerIntent();
 
         // Stub with http 403 error
@@ -125,7 +125,7 @@ public class SignInActivityTest {
     public void checkPopUpMessageDisplays() {
         String popUpMessage = "You have been signed out";
         Intent intent = SignInActivity
-                .newStartIntent(component.getApplication(), false, popUpMessage);
+                .getStartIntent(component.getApplication(), false, popUpMessage);
         main.launchActivity(intent);
 
         onView(withText(popUpMessage))
