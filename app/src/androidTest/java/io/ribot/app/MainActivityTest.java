@@ -1,5 +1,6 @@
 package io.ribot.app;
 
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -52,6 +53,11 @@ public class MainActivityTest {
     @Rule
     public TestRule chain = RuleChain.outerRule(component).around(clearDataRule).around(main);
 
+    // This Intent starts the MainActivity without launching the auto check-in service so
+    // we avoid problems with auto check-in service running in the background during tests.
+    private static final Intent MAIN_ACTIVITY_INTENT =
+            MainActivity.getStartIntent(InstrumentationRegistry.getTargetContext(), true);
+
     @Test
     public void signOutSuccessful() {
         doReturn(Observable.just(MockModelFabric.newRibotList(17)))
@@ -62,7 +68,7 @@ public class MainActivityTest {
                 .when(component.getDataManager())
                 .signOut();
 
-        main.launchActivity(null);
+        main.launchActivity(MAIN_ACTIVITY_INTENT);
 
         openActionBarOverflowOrOptionsMenu(main.getActivity());
         onView(withText(R.string.action_sign_out))
@@ -83,7 +89,7 @@ public class MainActivityTest {
                 .when(component.getDataManager())
                 .getRibots();
 
-        main.launchActivity(null);
+        main.launchActivity(MAIN_ACTIVITY_INTENT);
 
         onView(withId(R.id.text_no_ribots)).check(matches(not(isDisplayed())));
         onView(withId(R.id.recycler_view_team)).check(matches(isDisplayed()));
@@ -98,7 +104,7 @@ public class MainActivityTest {
                 .when(component.getDataManager())
                 .getRibots();
 
-        main.launchActivity(null);
+        main.launchActivity(MAIN_ACTIVITY_INTENT);
 
         onView(withText(main.getActivity().getString(R.string.message_no_ribots)))
                 .check(matches(isDisplayed()));
@@ -110,7 +116,7 @@ public class MainActivityTest {
                 .when(component.getDataManager())
                 .getRibots();
 
-        main.launchActivity(null);
+        main.launchActivity(MAIN_ACTIVITY_INTENT);
 
         onView(withText(main.getActivity().getString(R.string.error_loading_ribots)))
                 .check(matches(isDisplayed()));

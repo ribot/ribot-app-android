@@ -149,6 +149,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.estimote:sdk:0.9.4@aar'
 
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
