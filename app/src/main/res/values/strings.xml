@@ -33,5 +33,6 @@
     <!-- Error messages -->
 
     <string name="error_loading_ribots">Sorry, there was an error loading the ribots!</string>
+    <string name="error_authentication_message">There was an Authentication error, please sign in again!</string>
 
 </resources>
