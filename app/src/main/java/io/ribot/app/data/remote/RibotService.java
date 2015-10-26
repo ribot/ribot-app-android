@@ -1,7 +1,10 @@
 package io.ribot.app.data.remote;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.util.List;
 
@@ -42,12 +45,16 @@ public interface RibotService {
     /******** Instance class that sets up a new ribot services *******/
     class Instance {
 
-        public static RibotService newRibotService() {
+        public static RibotService newRibotService(Context context) {
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.interceptors().add(new UnauthorisedInterceptor(context));
+
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                     .create();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(RibotService.ENDPOINT)
+                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();

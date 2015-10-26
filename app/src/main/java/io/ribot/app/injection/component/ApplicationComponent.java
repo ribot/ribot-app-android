@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.ribot.app.data.DataManager;
+import io.ribot.app.data.remote.UnauthorisedInterceptor;
 import io.ribot.app.injection.module.ApplicationModule;
 import io.ribot.app.ui.checkin.CheckInPresenter;
 import io.ribot.app.ui.main.MainPresenter;
@@ -24,6 +25,7 @@ public interface ApplicationComponent {
     void inject(MainPresenter mainPresenter);
     void inject(CheckInPresenter checkInPresenter);
     void inject(TeamPresenter teamPresenter);
+    void inject(UnauthorisedInterceptor unauthorisedInterceptor);
 
     Application application();
     DataManager dataManager();
