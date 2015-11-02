@@ -3,12 +3,28 @@ package io.ribot.app;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
+
+import io.ribot.app.data.BusEvent;
+import io.ribot.app.data.DataManager;
 import io.ribot.app.injection.component.ApplicationComponent;
 import io.ribot.app.injection.component.DaggerApplicationComponent;
 import io.ribot.app.injection.module.ApplicationModule;
+import io.ribot.app.ui.signin.SignInActivity;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import timber.log.Timber;
 
 public class RibotApplication extends Application  {
+
+    @Inject
+    Bus mEventBus;
+
+    @Inject
+    DataManager mDataManager;
 
     ApplicationComponent mApplicationComponent;
 
@@ -23,6 +39,8 @@ public class RibotApplication extends Application  {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+        getComponent().inject(this);
+        mEventBus.register(this);
     }
 
     public static RibotApplication get(Context context) {
@@ -36,6 +54,24 @@ public class RibotApplication extends Application  {
     // Needed to replace the component with a test specific one
     public void setComponent(ApplicationComponent applicationComponent) {
         mApplicationComponent = applicationComponent;
+    }
+
+    @Subscribe
+    public void onAuthenticationError(BusEvent.AuthenticationError event) {
+        mDataManager.signOut()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        startSignInActivity();
+                    }
+                });
+    }
+
+    private void startSignInActivity() {
+        startActivity(SignInActivity.newStartIntent(
+                this, true, getString(R.string.authentication_message)));
     }
 }
 

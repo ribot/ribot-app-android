@@ -30,6 +30,8 @@
     <string name="dialog_action_cancel">Cancel</string>
     <string name="dialog_error_title">Sorry</string>
 
+    <string name="authentication_message">You have been signed out, please sign in again!</string>
+
     <!-- Error messages -->
 
     <string name="error_loading_ribots">Sorry, there was an error loading the ribots!</string>
