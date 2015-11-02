@@ -39,7 +39,7 @@ public class DataManagerModule {
     @Provides
     @PerDataManager
     RibotService provideRibotService() {
-        return RibotService.Instance.newRibotService();
+        return RibotService.Instance.newRibotService(mContext);
     }
 
     @Provides
