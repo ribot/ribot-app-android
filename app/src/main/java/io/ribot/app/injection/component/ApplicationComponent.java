@@ -8,6 +8,7 @@ import com.squareup.otto.Bus;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.remote.UnauthorisedInterceptor;
 import io.ribot.app.injection.module.ApplicationModule;
@@ -21,6 +22,7 @@ import rx.subscriptions.CompositeSubscription;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
 
+    void inject(RibotApplication ribotApplication);
     void inject(SignInPresenter signInPresenter);
     void inject(MainPresenter mainPresenter);
     void inject(CheckInPresenter checkInPresenter);
