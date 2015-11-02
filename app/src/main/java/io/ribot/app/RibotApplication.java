@@ -3,7 +3,10 @@ package io.ribot.app;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import io.ribot.app.data.BusEvent;
 import io.ribot.app.data.DataManager;
@@ -16,6 +19,12 @@ import rx.functions.Action1;
 import timber.log.Timber;
 
 public class RibotApplication extends Application  {
+
+    @Inject
+    Bus mEventBus;
+
+    @Inject
+    DataManager mDataManager;
 
     ApplicationComponent mApplicationComponent;
 
@@ -30,7 +39,8 @@ public class RibotApplication extends Application  {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
-        mApplicationComponent.eventBus().register(this);
+        getComponent().inject(this);
+        mEventBus.register(this);
     }
 
     public static RibotApplication get(Context context) {
@@ -48,10 +58,9 @@ public class RibotApplication extends Application  {
 
     @Subscribe
     public void onAuthenticationError(BusEvent.AuthenticationError event) {
-        DataManager dataManager = mApplicationComponent.dataManager();
-        dataManager.signOut()
+        mDataManager.signOut()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(dataManager.getSubscribeScheduler())
+                .subscribeOn(mDataManager.getSubscribeScheduler())
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
@@ -62,7 +71,7 @@ public class RibotApplication extends Application  {
 
     private void startSignInActivity() {
         startActivity(SignInActivity.newStartIntent(
-                this, true, getString(R.string.error_authentication_message)));
+                this, true, getString(R.string.authentication_message)));
     }
 }
 
