@@ -19,7 +19,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         try {
             //Uncomment line below if you want to enable foreign keys
             //db.execSQL("PRAGMA foreign_keys=ON;");
-            //Add other tables here
+            db.execSQL(Db.BeaconTable.CREATE);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

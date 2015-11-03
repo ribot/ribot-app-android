@@ -10,6 +10,8 @@ import java.util.List;
 
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;
+import io.ribot.app.data.model.Encounter;
+import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
 import retrofit.GsonConverterFactory;
@@ -19,6 +21,8 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
+import retrofit.http.PUT;
+import retrofit.http.Path;
 import retrofit.http.Query;
 import rx.Observable;
 
@@ -40,6 +44,19 @@ public interface RibotService {
     @POST("check-ins")
     Observable<CheckIn> checkIn(@Header(AUTH_HEADER) String authorization,
                                 @Body CheckInRequest checkInRequest);
+
+    @PUT("check-ins/{checkInId}")
+    Observable<CheckIn> updateCheckIn(@Header(AUTH_HEADER) String authorization,
+                                      @Path("checkInId") String checkInId,
+                                      @Body UpdateCheckInRequest updateCheckInRequest);
+
+    @POST("/beacons/{beaconId}/encounters")
+    Observable<Encounter> performBeaconEncounter(@Header(AUTH_HEADER) String authorization,
+                                    @Path("beaconId") String beaconId);
+
+    @GET("/beacons")
+    Observable<List<RegisteredBeacon>> getRegisteredBeacons(
+            @Header(AUTH_HEADER) String authorization);
 
 
     /******** Instance class that sets up a new ribot services *******/
@@ -81,6 +98,14 @@ public interface RibotService {
     class SignInResponse {
         public String accessToken;
         public Ribot ribot;
+    }
+
+    class UpdateCheckInRequest {
+        public boolean isCheckedOut;
+
+        public UpdateCheckInRequest(boolean isCheckedOut) {
+            this.isCheckedOut = isCheckedOut;
+        }
     }
 
 }

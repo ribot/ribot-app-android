@@ -12,6 +12,9 @@ import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.remote.UnauthorisedInterceptor;
 import io.ribot.app.injection.module.ApplicationModule;
+import io.ribot.app.service.AutoCheckInService;
+import io.ribot.app.service.BeaconsSyncService;
+import io.ribot.app.service.BootCompletedReceiver;
 import io.ribot.app.ui.checkin.CheckInPresenter;
 import io.ribot.app.ui.main.MainPresenter;
 import io.ribot.app.ui.signin.SignInPresenter;
@@ -28,6 +31,9 @@ public interface ApplicationComponent {
     void inject(CheckInPresenter checkInPresenter);
     void inject(TeamPresenter teamPresenter);
     void inject(UnauthorisedInterceptor unauthorisedInterceptor);
+    void inject(AutoCheckInService autoCheckInService);
+    void inject(BeaconsSyncService beaconsSyncService);
+    void inject(BootCompletedReceiver bootCompletedReceiver);
 
     Application application();
     DataManager dataManager();

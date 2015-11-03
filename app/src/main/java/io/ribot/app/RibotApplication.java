@@ -70,7 +70,7 @@ public class RibotApplication extends Application  {
     }
 
     private void startSignInActivity() {
-        startActivity(SignInActivity.newStartIntent(
+        startActivity(SignInActivity.getStartIntent(
                 this, true, getString(R.string.authentication_message)));
     }
 }

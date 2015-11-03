@@ -60,7 +60,7 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     @Bind(R.id.image_ribot_logo)
     ImageView mRibotLogo;
 
-    public static Intent newStartIntent(Context context, boolean clearPreviousActivities) {
+    public static Intent getStartIntent(Context context, boolean clearPreviousActivities) {
         Intent intent = new Intent(context, SignInActivity.class);
         if (clearPreviousActivities) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -69,10 +69,10 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     }
 
     // popUpMessage will show on a Dialog as soon as the Activity opens
-    public static Intent newStartIntent(Context context,
-                                         boolean clearPreviousActivities,
-                                         String popUpMessage) {
-        Intent intent = newStartIntent(context, clearPreviousActivities);
+    public static Intent getStartIntent(Context context,
+                                        boolean clearPreviousActivities,
+                                        String popUpMessage) {
+        Intent intent = getStartIntent(context, clearPreviousActivities);
         intent.putExtra(EXTRA_POPUP_MESSAGE, popUpMessage);
         return intent;
     }
