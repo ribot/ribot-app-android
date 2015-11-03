@@ -5,8 +5,6 @@ public class Venue {
     public String label;
     public Float latitude;
     public Float longitude;
-    // Attributes below don't come from the API
-    public boolean isTodayLastestCheckIn;
 
     public Venue() {
     }

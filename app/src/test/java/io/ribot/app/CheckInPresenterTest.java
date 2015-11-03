@@ -128,7 +128,7 @@ public class CheckInPresenterTest {
 
     @Test
     public void checkInSuccessful() {
-        String locationName = MockModelFabric.generateRandomString();
+        String locationName = MockModelFabric.randomString();
         CheckIn checkIn = MockModelFabric.newCheckInWithLabel();
         checkIn.label = locationName;
         CheckInRequest request = CheckInRequest.fromLabel(locationName);
@@ -145,7 +145,7 @@ public class CheckInPresenterTest {
 
     @Test
     public void checkInFail() {
-        String locationName = MockModelFabric.generateRandomString();
+        String locationName = MockModelFabric.randomString();
         CheckInRequest request = CheckInRequest.fromLabel(locationName);
         doReturn(Observable.error(new RuntimeException()))
                 .when(component.getDataManager())

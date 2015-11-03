@@ -16,6 +16,8 @@ import io.ribot.app.data.local.DatabaseHelper;
 import io.ribot.app.data.local.PreferencesHelper;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;
+import io.ribot.app.data.model.Encounter;
+import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
 import io.ribot.app.data.remote.GoogleAuthHelper;
@@ -27,7 +29,7 @@ import io.ribot.app.injection.module.DataManagerModule;
 import io.ribot.app.util.DateUtil;
 import rx.Observable;
 import rx.Scheduler;
-import rx.Subscriber;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -107,14 +109,14 @@ public class DataManager {
     }
 
     public Observable<Void> signOut() {
-        return Observable.create(new Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                mPreferencesHelper.clear();
-                subscriber.onCompleted();
-            }
-        });
-        // TODO clear database if we use one
+        return mDatabaseHelper.clearTables()
+                .doOnCompleted(new Action0() {
+                    @Override
+                    public void call() {
+                        mPreferencesHelper.clear();
+                        postEventSafely(new BusEvent.UserSignedOut());
+                    }
+                });
     }
 
     public Observable<List<Ribot>> getRibots() {
@@ -171,6 +173,31 @@ public class DataManager {
     }
 
     /**
+     * Marks a previous check-in as "checkedOut" and updates the value in preferences
+     * if the check-in matches the latest check-in.
+     */
+    public Observable<CheckIn> checkOut(final String checkInId) {
+        String auth = RibotService.Util.buildAuthorization(mPreferencesHelper.getAccessToken());
+        return mRibotService.updateCheckIn(auth, checkInId,
+                new RibotService.UpdateCheckInRequest(true))
+                .doOnNext(new Action1<CheckIn>() {
+                    @Override
+                    public void call(CheckIn checkInUpdated) {
+                        CheckIn latestCheckIn = mPreferencesHelper.getLatestCheckIn();
+                        if (latestCheckIn != null && latestCheckIn.id.equals(checkInUpdated.id)) {
+                            mPreferencesHelper.putLatestCheckIn(checkInUpdated);
+                        }
+                        String encounterCheckInId =
+                                mPreferencesHelper.getLatestEncounterCheckInId();
+                        if (encounterCheckInId != null &&
+                                encounterCheckInId.equals(checkInUpdated.id)) {
+                            mPreferencesHelper.clearLatestEncounter();
+                        }
+                    }
+                });
+    }
+
+    /**
      * Returns today's latest manual check in, if there is one.
      */
     public Observable<CheckIn> getTodayLatestCheckIn() {
@@ -181,6 +208,56 @@ public class DataManager {
                         return DateUtil.isToday(checkIn.checkedInDate.getTime());
                     }
                 });
+    }
+
+    public Observable<Encounter> performBeaconEncounter(String beaconId) {
+        String auth = RibotService.Util.buildAuthorization(mPreferencesHelper.getAccessToken());
+        return mRibotService.performBeaconEncounter(auth, beaconId)
+                .doOnNext(new Action1<Encounter>() {
+                    @Override
+                    public void call(Encounter encounter) {
+                        mPreferencesHelper.putLatestEncounter(encounter);
+                    }
+                });
+    }
+
+    public Observable<Encounter> performBeaconEncounter(String uuid, int major, int minor) {
+        Observable<RegisteredBeacon> errorObservable = Observable.error(
+                new BeaconNotRegisteredException(uuid, major, minor));
+        return mDatabaseHelper.findRegisteredBeacon(uuid, major, minor)
+                .switchIfEmpty(errorObservable)
+                .concatMap(new Func1<RegisteredBeacon, Observable<Encounter>>() {
+                    @Override
+                    public Observable<Encounter> call(RegisteredBeacon registeredBeacon) {
+                        return performBeaconEncounter(registeredBeacon.id);
+                    }
+                });
+    }
+
+    public Observable<String> findRegisteredBeaconsUuids() {
+        return mDatabaseHelper.findRegisteredBeaconsUuids();
+    }
+
+    public Observable<Void> syncRegisteredBeacons() {
+        String auth = RibotService.Util.buildAuthorization(mPreferencesHelper.getAccessToken());
+        return mRibotService.getRegisteredBeacons(auth)
+                .concatMap(new Func1<List<RegisteredBeacon>, Observable<Void>>() {
+                    @Override
+                    public Observable<Void> call(List<RegisteredBeacon> beacons) {
+                        return mDatabaseHelper.setRegisteredBeacons(beacons);
+                    }
+                })
+                .doOnCompleted(postEventAction(new BusEvent.BeaconsSyncCompleted()));
+    }
+
+    /// Helper method to post events from doOnCompleted.
+    private Action0 postEventAction(final Object event) {
+        return new Action0() {
+            @Override
+            public void call() {
+                postEventSafely(event);
+            }
+        };
     }
 
     // Helper method to post an event from a different thread to the main one.
