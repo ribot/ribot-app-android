@@ -18,10 +18,10 @@ import timber.log.Timber;
 
 public class BeaconsSyncService extends Service {
 
+    private Subscription mSubscription;
+
     @Inject
     DataManager mDataManager;
-
-    private Subscription mSubscription;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, BeaconsSyncService.class);

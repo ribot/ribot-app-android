@@ -21,7 +21,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         RibotApplication.get(context).getComponent().inject(this);
         if (mDataManager.getPreferencesHelper().getAccessToken() != null) {
-           context.startService(AutoCheckInService.getStartIntent(context));
+            context.startService(AutoCheckInService.getStartIntent(context));
         }
     }
 
