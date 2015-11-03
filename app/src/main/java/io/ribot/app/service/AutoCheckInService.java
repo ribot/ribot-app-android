@@ -1,7 +1,6 @@
 package io.ribot.app.service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -49,6 +48,7 @@ public class AutoCheckInService extends Service implements
     private Subscription mCheckInSubscription;
     private Subscription mBeaconsUuidSubscription;
     private Set<String> mMonitoredRegionsUuids;
+
     @Inject
     DataManager mDataManager;
     @Inject
