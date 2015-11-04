@@ -18,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
 import io.ribot.app.data.model.CheckIn;
+import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.util.DateUtil;
 
@@ -52,8 +53,10 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
         if (latestCheckIn != null
                 && !latestCheckIn.isCheckedOut
                 && DateUtil.isToday(latestCheckIn.checkedInDate.getTime())) {
+            Encounter latestEncounter = latestCheckIn.getLatestEncounter();
+            holder.location.setText(latestEncounter == null ? latestCheckIn.getLocationName() :
+                    latestEncounter.beacon.zone.label);
             holder.layoutContainer.setAlpha(1f);
-            holder.location.setText(latestCheckIn.getLocationName());
         } else {
             holder.layoutContainer.setAlpha(0.4f);
             holder.location.setText(mContext.getString(R.string.text_checked_out));
