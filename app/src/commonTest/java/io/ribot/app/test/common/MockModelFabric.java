@@ -13,6 +13,7 @@ import io.ribot.app.data.model.Profile;
 import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
+import io.ribot.app.data.model.Zone;
 
 public class MockModelFabric {
 
@@ -92,6 +93,7 @@ public class MockModelFabric {
         beacon.uuid = randomString();
         beacon.major = random.nextInt(20000);
         beacon.minor = random.nextInt(20000);
+        beacon.zone = newZone();
         return beacon;
     }
 
@@ -110,6 +112,13 @@ public class MockModelFabric {
         encounter.checkIn = newCheckInWithVenue();
         encounter.beacon = newRegisteredBeacon();
         return encounter;
+    }
+
+    public static Zone newZone() {
+        Zone zone = new Zone();
+        zone.label = randomString();
+        zone.id = randomString();
+        return zone;
     }
 
 }

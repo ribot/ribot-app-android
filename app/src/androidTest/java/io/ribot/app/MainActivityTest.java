@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.ribot.app.data.model.CheckIn;
+import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.test.common.ClearDataRule;
 import io.ribot.app.test.common.MockModelFabric;
@@ -80,11 +82,21 @@ public class MainActivityTest {
 
     @Test
     public void displayRibotsInTeamGridSuccess() {
-        List<Ribot> ribotList = MockModelFabric.newRibotList(17);
+        // We only use 4 items because RecyclerViewActions.scrollToPosition() seemed to be
+        // quite buggy when trying to scroll a grid.
+        List<Ribot> ribotList = MockModelFabric.newRibotList(4);
+        // First ribot is checked in
         ribotList.get(0).checkIns =
                 Collections.singletonList(MockModelFabric.newCheckInWithVenue());
-        ribotList.get(4).checkIns =
-                Collections.singletonList(MockModelFabric.newCheckInWithLabel());
+        // Last ribot is checked-in with an encounter
+        CheckIn checkInWithEncounters = MockModelFabric.newCheckInWithVenue();
+        checkInWithEncounters.beaconEncounters =
+                Collections.singletonList(MockModelFabric.newEncounter());
+        ribotList.get(ribotList.size() - 1).checkIns =
+                Collections.singletonList(checkInWithEncounters);
+        // The RecylerView will sort the list so we ensure our list is sorted
+        // the same before comparing
+        Collections.sort(ribotList);
         doReturn(Observable.just(ribotList))
                 .when(component.getDataManager())
                 .getRibots();
@@ -124,14 +136,15 @@ public class MainActivityTest {
 
     private void checkRibotDisplayOnRecyclerView(List<Ribot> ribotsToCheck) {
         for (int i = 0; i < ribotsToCheck.size(); i++) {
-            // We need to scroll as all the items don't load unlesss you do so...
-            onView(withId(R.id.recycler_view_team))
-                    .perform(RecyclerViewActions.scrollToPosition(ribotsToCheck.size() - 1));
             onView(withId(R.id.recycler_view_team))
                     .perform(RecyclerViewActions.scrollToPosition(i));
             Ribot ribot = ribotsToCheck.get(i);
             if (ribot.checkIns != null && !ribot.checkIns.isEmpty()) {
-                onView(withText(ribot.checkIns.get(0).getLocationName()))
+                CheckIn checkIn = ribot.checkIns.get(0);
+                Encounter encounter = checkIn.getLatestEncounter();
+                String expectedLocationName = encounter == null ? checkIn.getLocationName() :
+                        encounter.beacon.zone.label;
+                onView(withText(expectedLocationName))
                         .check(matches(isDisplayed()));
             }
             onView(withText(ribot.profile.name.first))
