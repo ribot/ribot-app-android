@@ -14,6 +14,7 @@ import io.ribot.app.util.AndroidComponentUtil;
 import io.ribot.app.util.NetworkUtil;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class BeaconsSyncService extends Service {
@@ -51,6 +52,9 @@ public class BeaconsSyncService extends Service {
         if (mSubscription != null && !mSubscription.isUnsubscribed()) mSubscription.unsubscribe();
         mSubscription = mDataManager.syncRegisteredBeacons()
                 .subscribeOn(mDataManager.getSubscribeScheduler())
+                // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
+                // Can removed once issue fixed
+                .unsubscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Void>() {
                     @Override
                     public void onCompleted() {

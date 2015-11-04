@@ -16,6 +16,7 @@ import io.ribot.app.ui.base.Presenter;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class TeamPresenter implements Presenter<TeamMvpView> {
@@ -43,6 +44,9 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
         mSubscription = mDataManager.getRibots()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(mDataManager.getSubscribeScheduler())
+                // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
+                // Can removed once issue fixed
+                .unsubscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
                     public void onCompleted() {
