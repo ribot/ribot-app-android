@@ -54,6 +54,8 @@ public class DatabaseHelperTest {
                 beaconToFind.major, beaconToFind.minor)
                 .subscribe(testSubscriber);
 
+        //zone is not saved in DB so we won't expect it to be returned
+        beaconToFind.zone = null;
         testSubscriber.assertNoErrors();
         testSubscriber.assertValue(beaconToFind);
         testSubscriber.assertCompleted();
@@ -129,6 +131,8 @@ public class DatabaseHelperTest {
         assertEquals(expectedBeacons.size(), cursor.getCount());
         for (RegisteredBeacon beacon : expectedBeacons) {
             cursor.moveToNext();
+            //zone is not saved in DB so we won't expect it to be returned
+            beacon.zone = null;
             assertEquals(beacon, Db.BeaconTable.parseCursor(cursor));
         }
         cursor.close();
