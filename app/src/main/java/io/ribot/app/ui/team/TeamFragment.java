@@ -42,14 +42,20 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     ProgressBar mProgress;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        ((BaseActivity) getActivity()).activityComponent().inject(this);
+        mRibotAdapter = new RibotAdapter(getActivity());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_team, container, false);
         ButterKnife.bind(this, fragmentView);
-        ((BaseActivity) getActivity()).activityComponent().inject(this);
         mTeamPresenter.attachView(this);
-        mRibotAdapter = new RibotAdapter(getActivity());
         mTeamRecycler.setHasFixedSize(true);
         mTeamRecycler.setAdapter(mRibotAdapter);
         mSwipeRefreshContainer.setColorSchemeResources(R.color.primary);
