@@ -13,6 +13,7 @@ import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.ui.base.Presenter;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -25,6 +26,7 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
     protected DataManager mDataManager;
     public Subscription mSubscription;
     private TeamMvpView mMvpView;
+    private List<Ribot> mCachedRibots;
 
     @Override
     public void attachView(TeamMvpView mvpView) {
@@ -39,14 +41,19 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
     }
 
     public void loadRibots() {
+        loadRibots(false);
+    }
+
+    /**
+     * Load the list of Ribots
+     * @param allowMemoryCacheVersion if true a cached version will be returned from memory,
+     *                                unless nothing is cached yet. Use false if you want an up
+     *                                to date version of the ribots.
+     */
+    public void loadRibots(boolean allowMemoryCacheVersion) {
         mMvpView.showRibotProgress(true);
         if (mSubscription != null) mSubscription.unsubscribe();
-        mSubscription = mDataManager.getRibots()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
-                // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
-                // Can removed once issue fixed
-                .unsubscribeOn(Schedulers.io())
+        mSubscription = getRibotsObservable(allowMemoryCacheVersion)
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
                     public void onCompleted() {
@@ -64,6 +71,7 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
 
                     @Override
                     public void onNext(List<Ribot> ribots) {
+                        mCachedRibots = ribots;
                         if (!ribots.isEmpty()) {
                             Collections.sort(ribots);
                             mMvpView.showRibots(ribots);
@@ -72,5 +80,18 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
                         }
                     }
                 });
+    }
+
+    private Observable<List<Ribot>> getRibotsObservable(boolean allowMemoryCacheVersion) {
+        if (allowMemoryCacheVersion && mCachedRibots != null) {
+            return Observable.just(mCachedRibots);
+        } else {
+            return mDataManager.getRibots()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(mDataManager.getSubscribeScheduler())
+                    // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
+                    // Can removed once issue fixed
+                    .unsubscribeOn(Schedulers.io());
+        }
     }
 }
