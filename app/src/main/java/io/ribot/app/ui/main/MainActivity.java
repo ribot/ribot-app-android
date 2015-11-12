@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         // Trigger auto check-in related services, unless the flag indicates not to.
         boolean autoCheckInDisabled = getIntent()
                 .getBooleanExtra(EXTRA_AUTO_CHECK_IN_DISABLED, false);
-        if (!autoCheckInDisabled) {
+        if (!autoCheckInDisabled && savedInstanceState == null) {
             startService(BeaconsSyncService.getStartIntent(this));
             // Handle requesting Estimote sdk requirements like enabling bt or permissions
             SystemRequirementsChecker.checkWithDefaultDialogs(this);
