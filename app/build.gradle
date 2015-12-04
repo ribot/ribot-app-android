@@ -92,6 +92,7 @@ dependencies {
     final PLAY_SERVICES_VERSION = '8.3.0'
     final SUPPORT_LIBRARY_VERSION = '23.1.1'
     final RETROFIT_VERSION = '2.0.0-beta2'
+    final OKHTTP_VERSION = '2.6.0'
     final DAGGER_VERSION = '2.0.1'
     final DEXMAKER_VERSION = '1.4'
     final HAMCREST_VERSION = '1.3'
@@ -113,6 +114,8 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:adapter-rxjava:$RETROFIT_VERSION"
+    compile "com.squareup.okhttp:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp:logging-interceptor:$OKHTTP_VERSION"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.sqlbrite:sqlbrite:0.3.1'
