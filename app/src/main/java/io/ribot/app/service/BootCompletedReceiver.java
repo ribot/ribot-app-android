@@ -14,8 +14,7 @@ import io.ribot.app.data.DataManager;
  */
 public class BootCompletedReceiver extends BroadcastReceiver {
 
-    @Inject
-    DataManager mDataManager;
+    @Inject DataManager mDataManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {

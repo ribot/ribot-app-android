@@ -2,6 +2,7 @@ package io.ribot.app.injection.module;
 
 import android.accounts.AccountManager;
 import android.app.Application;
+import android.content.Context;
 
 import com.squareup.otto.Bus;
 
@@ -9,7 +10,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.ribot.app.data.DataManager;
+import io.ribot.app.data.remote.RibotService;
+import io.ribot.app.injection.ApplicationContext;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -25,21 +27,26 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     Application provideApplication() {
         return mApplication;
     }
 
     @Provides
-    @Singleton
-    DataManager provideDataManager() {
-        return new DataManager(mApplication);
+    @ApplicationContext
+    Context provideContext() {
+        return mApplication;
     }
 
     @Provides
     @Singleton
     Bus provideEventBus() {
         return new Bus();
+    }
+
+    @Provides
+    @Singleton
+    RibotService provideRibotService() {
+        return RibotService.Factory.makeRibotService(mApplication);
     }
 
     @Provides

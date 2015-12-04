@@ -40,9 +40,8 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(AndroidJUnit4.class)
 public class SignInActivityTest {
 
-    public final TestComponentRule component = new TestComponentRule(
-            RibotApplication.get(InstrumentationRegistry.getTargetContext()),
-            true);
+    public final TestComponentRule component =
+            new TestComponentRule(InstrumentationRegistry.getTargetContext());
     public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final IntentsTestRule<SignInActivity> main =
             new IntentsTestRule<>(SignInActivity.class, false, false);
@@ -56,7 +55,7 @@ public class SignInActivityTest {
 
     @Test
     public void checkViewsDisplay() {
-        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getContext(), false));
 
         onView(withId(R.id.button_sign_in))
                 .check(matches(isDisplayed()));
@@ -68,14 +67,14 @@ public class SignInActivityTest {
 
     @Test
     public void signInSuccessfulNavigatesToWelcome() {
-        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getContext(), false));
         stubAccountPickerIntent();
 
         // Stub sign in method in the DataManager
         Ribot ribot = MockModelFabric.newRibot();
         doReturn(Observable.just(ribot))
                 .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mSelectedAccount));
+                .signIn(mSelectedAccount);
 
         onView(withId(R.id.button_sign_in))
                 .perform(click());
@@ -88,13 +87,13 @@ public class SignInActivityTest {
 
     @Test
     public void signInFailsWithGeneralError() {
-        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getContext(), false));
         stubAccountPickerIntent();
 
         // Stub an error when calling sign in
         doReturn(Observable.error(new RuntimeException("Error")))
                 .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mSelectedAccount));
+                .signIn(mSelectedAccount);
 
         onView(withId(R.id.button_sign_in))
                 .perform(click());
@@ -104,14 +103,14 @@ public class SignInActivityTest {
 
     @Test
     public void signInFailsWithProfileNotFound() {
-        main.launchActivity(SignInActivity.getStartIntent(component.getApplication(), false));
+        main.launchActivity(SignInActivity.getStartIntent(component.getContext(), false));
         stubAccountPickerIntent();
 
         // Stub with http 403 error
         HttpException http403Exception = new HttpException(Response.error(403, null));
         doReturn(Observable.error(http403Exception))
                 .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mSelectedAccount));
+                .signIn(mSelectedAccount);
 
         onView(withId(R.id.button_sign_in))
                 .perform(click());
@@ -125,7 +124,7 @@ public class SignInActivityTest {
     public void checkPopUpMessageDisplays() {
         String popUpMessage = "You have been signed out";
         Intent intent = SignInActivity
-                .getStartIntent(component.getApplication(), false, popUpMessage);
+                .getStartIntent(component.getContext(), false, popUpMessage);
         main.launchActivity(intent);
 
         onView(withText(popUpMessage))

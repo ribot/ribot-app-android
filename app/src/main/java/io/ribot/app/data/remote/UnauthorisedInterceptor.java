@@ -17,8 +17,7 @@ import io.ribot.app.data.BusEvent;
 
 public class UnauthorisedInterceptor implements Interceptor {
 
-    @Inject
-    Bus eventBus;
+    @Inject Bus eventBus;
 
     public UnauthorisedInterceptor(Context context) {
         RibotApplication.get(context).getComponent().inject(this);

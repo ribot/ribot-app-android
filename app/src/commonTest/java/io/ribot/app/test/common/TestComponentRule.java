@@ -1,5 +1,6 @@
 package io.ribot.app.test.common;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 
 import org.junit.rules.TestRule;
@@ -7,9 +8,9 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import io.ribot.app.RibotApplication;
+import io.ribot.app.data.DataManager;
 import io.ribot.app.data.local.DatabaseHelper;
 import io.ribot.app.data.local.PreferencesHelper;
-import io.ribot.app.data.remote.GoogleAuthHelper;
 import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.test.common.injection.component.DaggerTestComponent;
 import io.ribot.app.test.common.injection.component.TestComponent;
@@ -25,64 +26,43 @@ import io.ribot.app.test.common.injection.module.ApplicationTestModule;
 public class TestComponentRule implements TestRule {
 
     private TestComponent mTestComponent;
-    private RibotApplication mRibotApplication;
-    private boolean mMockableDataManager;
+    private Context mContext;
 
-    public TestComponentRule(RibotApplication ribotApplication) {
-        mRibotApplication = ribotApplication;
-        mMockableDataManager = false;
+    public TestComponentRule(Context context) {
+        mContext = context;
     }
 
-    /**
-     * If mockableDataManager is true, it will crate a data manager using Mockity.spy()
-     * Spy objects call real methods unless they are stubbed. So the DataManager will work as
-     * usual unless an specific method is mocked.
-     * A full mock DataManager is not an option because there are several methods that still
-     * need to return the real value, i.e dataManager.getSubscribeScheduler()
-     */
-    public TestComponentRule(RibotApplication ribotApplication, boolean mockableDataManager) {
-        mRibotApplication = ribotApplication;
-        mMockableDataManager = mockableDataManager;
+    public Context getContext() {
+        return mContext;
     }
 
-    public Context getApplication() {
-        return mRibotApplication;
+    public RibotService getMockRibotsService() {
+        return mTestComponent.ribotService();
     }
 
-    public TestComponent getTestComponent() {
-        return mTestComponent;
+    public AccountManager getMockAccountManager() {
+        return mTestComponent.accountManager();
     }
 
-    public TestDataManager getDataManager() {
-        return (TestDataManager) mTestComponent.dataManager();
-    }
-
-    public RibotService getMockRibotService() {
-        return getDataManager().getRibotService();
+    //tODO remove
+    public DataManager getDataManager() {
+        return mTestComponent.dataManager();
     }
 
     public DatabaseHelper getDatabaseHelper() {
-        return getDataManager().getDatabaseHelper();
+        return mTestComponent.databaseHelper();
     }
 
     public PreferencesHelper getPreferencesHelper() {
-        return getDataManager().getPreferencesHelper();
-    }
-
-    public GoogleAuthHelper getMockGoogleAuthHelper() {
-        return getDataManager().getGoogleAuthHelper();
+        return mTestComponent.preferencesHelper();
     }
 
     private void setupDaggerTestComponentInApplication() {
-        if (mRibotApplication.getComponent() instanceof TestComponent) {
-            mTestComponent = (TestComponent) mRibotApplication.getComponent();
-        } else {
-            mTestComponent = DaggerTestComponent.builder()
-                    .applicationTestModule(
-                            new ApplicationTestModule(mRibotApplication, mMockableDataManager))
-                    .build();
-            mRibotApplication.setComponent(mTestComponent);
-        }
+        RibotApplication application = RibotApplication.get(mContext);
+        mTestComponent = DaggerTestComponent.builder()
+                .applicationTestModule(new ApplicationTestModule(application))
+                .build();
+        application.setComponent(mTestComponent);
     }
 
     @Override

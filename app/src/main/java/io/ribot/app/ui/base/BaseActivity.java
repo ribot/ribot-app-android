@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import io.ribot.app.RibotApplication;
 import io.ribot.app.injection.component.ActivityComponent;
 import io.ribot.app.injection.component.DaggerActivityComponent;
-import io.ribot.app.injection.module.PresentersModule;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -24,7 +23,6 @@ public class BaseActivity extends AppCompatActivity {
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
                     .applicationComponent(RibotApplication.get(this).getComponent())
-                    .presentersModule(new PresentersModule())
                     .build();
         }
         return mActivityComponent;
