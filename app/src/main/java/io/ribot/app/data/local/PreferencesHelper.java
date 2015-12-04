@@ -11,18 +11,20 @@ import com.google.gson.reflect.TypeToken;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
+import io.ribot.app.injection.ApplicationContext;
 import rx.Observable;
 import rx.Subscriber;
 
+@Singleton
 public class PreferencesHelper {
-
-    private SharedPreferences mPref;
-    private Gson mGson;
 
     public static final String PREF_FILE_NAME = "ribot_app_pref_file";
 
@@ -36,7 +38,11 @@ public class PreferencesHelper {
     private static final String PREF_KEY_LATEST_ENCOUNTER_CHECK_IN_ID =
             "PREF_KEY_LATEST_ENCOUNTER_CHECK_IN_ID";
 
-    public PreferencesHelper(Context context) {
+    private final SharedPreferences mPref;
+    private final Gson mGson;
+
+    @Inject
+    public PreferencesHelper(@ApplicationContext Context context) {
         mPref = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
         mGson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz")

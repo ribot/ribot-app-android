@@ -24,9 +24,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class WelcomeActivityTest {
 
-    public final TestComponentRule component = new TestComponentRule(
-            RibotApplication.get(InstrumentationRegistry.getTargetContext()),
-            true);
+    public final TestComponentRule component =
+            new TestComponentRule(InstrumentationRegistry.getTargetContext());
     public final ActivityTestRule<WelcomeActivity> main =
             new ActivityTestRule<>(WelcomeActivity.class, false, false);
     // TestComponentRule needs to go first so we make sure the ApplicationTestComponent is set
@@ -37,7 +36,7 @@ public class WelcomeActivityTest {
     @Test
     public void checkViewsDisplay() {
         Profile profile = MockModelFabric.newProfile();
-        main.launchActivity(WelcomeActivity.newStartIntent(component.getApplication(), profile));
+        main.launchActivity(WelcomeActivity.newStartIntent(component.getContext(), profile));
 
         String expectedGreeting = main.getActivity()
                 .getString(R.string.welcome_greetings, profile.name.first);

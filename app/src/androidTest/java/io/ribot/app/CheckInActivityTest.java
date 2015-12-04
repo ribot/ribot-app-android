@@ -37,9 +37,8 @@ import static org.mockito.Mockito.doReturn;
 
 public class CheckInActivityTest {
 
-    public final TestComponentRule component = new TestComponentRule(
-            RibotApplication.get(InstrumentationRegistry.getTargetContext()),
-            true);
+    public final TestComponentRule component =
+            new TestComponentRule(InstrumentationRegistry.getTargetContext());
     public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final IntentsTestRule<CheckInActivity> main =
             new IntentsTestRule<>(CheckInActivity.class, false, false);

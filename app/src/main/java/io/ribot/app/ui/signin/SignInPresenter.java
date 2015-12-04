@@ -16,19 +16,23 @@ import io.ribot.app.util.NetworkUtil;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class SignInPresenter implements Presenter<SignInMvpView> {
 
-    @Inject
-    protected DataManager mDataManager;
+    private final DataManager mDataManager;
     private SignInMvpView mMvpView;
     private Subscription mSubscription;
+
+    @Inject
+    public SignInPresenter(DataManager dataManager) {
+        mDataManager = dataManager;
+    }
 
     @Override
     public void attachView(SignInMvpView mvpView) {
         this.mMvpView = mvpView;
-        RibotApplication.get(mMvpView.getViewContext()).getComponent().inject(this);
     }
 
     @Override
@@ -41,9 +45,9 @@ public class SignInPresenter implements Presenter<SignInMvpView> {
         Timber.i("Starting sign in with account " + account.name);
         mMvpView.showProgress(true);
         mMvpView.setSignInButtonEnabled(false);
-        mSubscription = mDataManager.signIn(mMvpView.getViewContext(), account)
+        mSubscription = mDataManager.signIn(account)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Ribot>() {
                     @Override
                     public void onCompleted() {

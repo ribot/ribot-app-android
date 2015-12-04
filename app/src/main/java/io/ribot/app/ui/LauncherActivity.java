@@ -12,8 +12,7 @@ import io.ribot.app.ui.signin.SignInActivity;
 
 public class LauncherActivity extends BaseActivity {
 
-    @Inject
-    protected DataManager mDataManager;
+    @Inject DataManager mDataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

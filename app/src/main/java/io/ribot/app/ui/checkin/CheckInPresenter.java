@@ -19,21 +19,24 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 public class CheckInPresenter implements Presenter<CheckInMvpView> {
 
-    @Inject
-    protected DataManager mDataManager;
-    @Inject
-    protected CompositeSubscription mSubscriptions;
+    @Inject protected CompositeSubscription mSubscriptions;
+    private final DataManager mDataManager;
     private CheckInMvpView mMvpView;
+
+    @Inject
+    public CheckInPresenter(DataManager dataManager) {
+        mDataManager = dataManager;
+    }
 
     @Override
     public void attachView(CheckInMvpView mvpView) {
         mMvpView = mvpView;
-        RibotApplication.get(mMvpView.getViewContext()).getComponent().inject(this);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<VenuesInfo>() {
                     @Override
                     public void onCompleted() {
@@ -89,7 +92,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
         showCheckInProgress(true, checkInRequest);
         mSubscriptions.add(mDataManager.checkIn(checkInRequest)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<CheckIn>() {
                     @Override
                     public void onCompleted() {
@@ -127,7 +130,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Action1<CheckIn>() {
                     @Override
                     public void call(CheckIn checkIn) {

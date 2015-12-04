@@ -9,7 +9,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.ribot.app.R;
-import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.ui.base.Presenter;
@@ -22,16 +21,19 @@ import timber.log.Timber;
 
 public class TeamPresenter implements Presenter<TeamMvpView> {
 
-    @Inject
-    protected DataManager mDataManager;
+    private final DataManager mDataManager;
     public Subscription mSubscription;
     private TeamMvpView mMvpView;
     private List<Ribot> mCachedRibots;
 
+    @Inject
+    public TeamPresenter(DataManager dataManager) {
+        mDataManager = dataManager;
+    }
+
     @Override
     public void attachView(TeamMvpView mvpView) {
         mMvpView = mvpView;
-        RibotApplication.get(mMvpView.getViewContext()).getComponent().inject(this);
     }
 
     @Override
@@ -54,6 +56,11 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
         mMvpView.showRibotProgress(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = getRibotsObservable(allowMemoryCacheVersion)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
+                // Can removed once issue fixed
+                .unsubscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
                     public void onCompleted() {

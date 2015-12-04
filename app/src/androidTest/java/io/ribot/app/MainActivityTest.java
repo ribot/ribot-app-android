@@ -38,9 +38,8 @@ import static org.mockito.Mockito.doReturn;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    public final TestComponentRule component = new TestComponentRule(
-            RibotApplication.get(InstrumentationRegistry.getTargetContext()),
-            true);
+    public final TestComponentRule component =
+            new TestComponentRule(InstrumentationRegistry.getTargetContext());
     public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final ActivityTestRule<MainActivity> main =
             new ActivityTestRule<MainActivity>(MainActivity.class, false, false) {

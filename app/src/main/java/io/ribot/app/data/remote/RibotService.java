@@ -59,10 +59,10 @@ public interface RibotService {
             @Header(AUTH_HEADER) String authorization);
 
 
-    /******** Instance class that sets up a new ribot services *******/
-    class Instance {
+    /******** Factory class that sets up a new ribot services *******/
+    class Factory {
 
-        public static RibotService newRibotService(Context context) {
+        public static RibotService makeRibotService(Context context) {
             OkHttpClient okHttpClient = new OkHttpClient();
             okHttpClient.interceptors().add(new UnauthorisedInterceptor(context));
 

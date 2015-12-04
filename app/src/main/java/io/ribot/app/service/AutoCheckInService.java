@@ -34,6 +34,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class AutoCheckInService extends Service implements
@@ -49,10 +50,8 @@ public class AutoCheckInService extends Service implements
     private Subscription mBeaconsUuidSubscription;
     private Set<String> mMonitoredRegionsUuids;
 
-    @Inject
-    DataManager mDataManager;
-    @Inject
-    Bus mBus;
+    @Inject DataManager mDataManager;
+    @Inject Bus mBus;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AutoCheckInService.class);
@@ -185,7 +184,7 @@ public class AutoCheckInService extends Service implements
         // major/minor.
         if (mBeaconsUuidSubscription != null) mBeaconsUuidSubscription.unsubscribe();
         mBeaconsUuidSubscription = mDataManager.findRegisteredBeaconsUuids()
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                         // Filter UUIDs that match regions already being monitored
                 .filter(new Func1<String, Boolean>() {
                     @Override
@@ -215,7 +214,7 @@ public class AutoCheckInService extends Service implements
         if (mCheckInSubscription != null) mCheckInSubscription.unsubscribe();
         mCheckInSubscription = mDataManager.performBeaconEncounter(
                 beacon.getProximityUUID().toString(), beacon.getMajor(), beacon.getMinor())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Encounter>() {
                     @Override
                     public void onCompleted() {
@@ -253,7 +252,7 @@ public class AutoCheckInService extends Service implements
         if (mCheckInSubscription != null) mCheckInSubscription.unsubscribe();
         mCheckInSubscription = mDataManager.checkOut(checkInId)
                 .retry(3)
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<CheckIn>() {
                     @Override
                     public void onCompleted() {
