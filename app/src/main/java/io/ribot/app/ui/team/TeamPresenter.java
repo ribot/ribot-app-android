@@ -56,11 +56,6 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
         mMvpView.showRibotProgress(true);
         if (mSubscription != null) mSubscription.unsubscribe();
         mSubscription = getRibotsObservable(allowMemoryCacheVersion)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
-                // Can removed once issue fixed
-                .unsubscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
                     public void onCompleted() {
@@ -95,7 +90,7 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
         } else {
             return mDataManager.getRibots()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(mDataManager.getSubscribeScheduler())
+                    .subscribeOn(Schedulers.io())
                     // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
                     // Can removed once issue fixed
                     .unsubscribeOn(Schedulers.io());
