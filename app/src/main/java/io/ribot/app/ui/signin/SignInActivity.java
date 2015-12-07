@@ -40,7 +40,7 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     private static final int REQUEST_PERMISSION_GET_ACCOUNTS = 2;
     private static final int REQUEST_CODE_ACCOUNT_PICKER = 3;
     private static final int REQUEST_CODE_AUTH_EXCEPTION = 4;
-    private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
+    public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 
     @Inject
     protected AccountManager mAccountManager;

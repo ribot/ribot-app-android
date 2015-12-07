@@ -7,7 +7,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.ribot.app.R;
-import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;

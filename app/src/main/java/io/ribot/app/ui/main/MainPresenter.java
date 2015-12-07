@@ -2,7 +2,6 @@ package io.ribot.app.ui.main;
 
 import javax.inject.Inject;
 
-import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.ui.base.Presenter;
 import rx.Subscriber;

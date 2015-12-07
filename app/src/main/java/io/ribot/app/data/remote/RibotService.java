@@ -8,7 +8,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.List;
-import java.util.logging.Level;
 
 import io.ribot.app.BuildConfig;
 import io.ribot.app.data.model.CheckIn;

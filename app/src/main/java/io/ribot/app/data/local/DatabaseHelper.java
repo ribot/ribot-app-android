@@ -1,6 +1,5 @@
 package io.ribot.app.data.local;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.squareup.sqlbrite.BriteDatabase;

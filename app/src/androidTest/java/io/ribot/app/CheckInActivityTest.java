@@ -15,7 +15,6 @@ import java.util.List;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;
 import io.ribot.app.data.model.Venue;
-import io.ribot.app.test.common.ClearDataRule;
 import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.checkin.CheckInActivity;
@@ -39,28 +38,31 @@ public class CheckInActivityTest {
 
     public final TestComponentRule component =
             new TestComponentRule(InstrumentationRegistry.getTargetContext());
-    public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final IntentsTestRule<CheckInActivity> main =
             new IntentsTestRule<>(CheckInActivity.class, false, false);
     // TestComponentRule needs to go first so we make sure the ApplicationTestComponent is set
     // in the Application before any Activity is launched.
-    // ClearDataRule must run after the TestComponent is set up but before ActivityTestRule.
     @Rule
-    public TestRule chain = RuleChain.outerRule(component).around(clearDataRule).around(main);
+    public TestRule chain = RuleChain.outerRule(component).around(main);
 
     private List<Venue> mVenues;
 
     @Before
-    public void stubGetVenuesDataManager() {
+    public void setUp() {
         mVenues = MockModelFabric.newVenueList(10);
         doReturn(Observable.just(mVenues))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .getVenues();
+        // Stub to return empty by default, some tests may override this stub
+        doReturn(Observable.empty())
+                .when(component.getMockDataManager())
+                .getTodayLatestCheckIn();
     }
 
     @Test
     public void checkInButtonShowsOnlyWhenTyping() {
         main.launchActivity(null);
+
         onView(withId(R.id.fab_check_in))
                 .check(matches(not(isDisplayed())));
         onView(withId(R.id.edit_text_location))
@@ -72,6 +74,7 @@ public class CheckInActivityTest {
     @Test
     public void venuesShow() {
         main.launchActivity(null);
+
         for (int position = 0; position < mVenues.size(); position++) {
             Venue venue = mVenues.get(position);
             onView(withId(R.id.recycler_view_venues))
@@ -86,7 +89,9 @@ public class CheckInActivityTest {
         Venue venue = mVenues.get(2);
         CheckIn checkIn = MockModelFabric.newCheckInWithVenue();
         checkIn.venue = venue;
-        component.getPreferencesHelper().putLatestCheckIn(checkIn);
+        doReturn(Observable.just(checkIn))
+                .when(component.getMockDataManager())
+                .getTodayLatestCheckIn();
         main.launchActivity(null);
 
         onView(allOf(withId(R.id.image_venue_tick), isDisplayed()))
@@ -96,7 +101,9 @@ public class CheckInActivityTest {
     @Test
     public void previousLabelCheckInShows() {
         CheckIn checkIn = MockModelFabric.newCheckInWithLabel();
-        component.getPreferencesHelper().putLatestCheckIn(checkIn);
+        doReturn(Observable.just(checkIn))
+                .when(component.getMockDataManager())
+                .getTodayLatestCheckIn();
         main.launchActivity(null);
 
         onView(withId(R.id.edit_text_location))
@@ -111,7 +118,7 @@ public class CheckInActivityTest {
         CheckIn checkIn = MockModelFabric.newCheckInWithLabel();
         checkIn.label = label;
         doReturn(Observable.just(checkIn))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .checkIn(any(CheckInRequest.class));
 
         onView(withId(R.id.edit_text_location))
@@ -128,7 +135,7 @@ public class CheckInActivityTest {
         main.launchActivity(null);
         String label = "The cow";
         doReturn(Observable.error(new RuntimeException()))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .checkIn(any(CheckInRequest.class));
 
         onView(withId(R.id.edit_text_location))
@@ -147,7 +154,7 @@ public class CheckInActivityTest {
         CheckIn checkIn = MockModelFabric.newCheckInWithVenue();
         checkIn.venue = venue;
         doReturn(Observable.just(checkIn))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .checkIn(CheckInRequest.fromVenue(venue.id));
 
         onView(withId(R.id.recycler_view_venues))
@@ -162,7 +169,7 @@ public class CheckInActivityTest {
         int venuePosition = 3;
         Venue venue = mVenues.get(venuePosition);
         doReturn(Observable.error(new RuntimeException()))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .checkIn(CheckInRequest.fromVenue(venue.id));
 
         onView(withId(R.id.recycler_view_venues))

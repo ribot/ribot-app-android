@@ -1,7 +1,6 @@
 package io.ribot.app.data;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
