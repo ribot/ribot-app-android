@@ -210,9 +210,9 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     }
 
     @Override
-    public void showProfileNotFoundError() {
+    public void showProfileNotFoundError(String accountName) {
         DialogFactory.createGenericErrorDialog(this,
-                getString(R.string.error_ribot_profile_not_found)).show();
+                getString(R.string.error_ribot_profile_not_found, accountName)).show();
     }
 
     @Override

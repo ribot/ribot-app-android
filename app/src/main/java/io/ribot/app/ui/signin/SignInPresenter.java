@@ -65,7 +65,7 @@ public class SignInPresenter implements Presenter<SignInMvpView> {
                             if (NetworkUtil.isHttpStatusCode(e, 403)) {
                                 // Google Auth was successful, but the user does not have a ribot
                                 // profile set up.
-                                mMvpView.showProfileNotFoundError();
+                                mMvpView.showProfileNotFoundError(account.name);
                             } else {
                                 mMvpView.showGeneralSignInError();
                             }
