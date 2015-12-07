@@ -103,7 +103,7 @@ public class SignInPresenterTest {
         //Check that the right methods are called
         verify(mMockSignInMvpView).showProgress(true);
         verify(mMockSignInMvpView).setSignInButtonEnabled(true);
-        verify(mMockSignInMvpView).showProfileNotFoundError();
+        verify(mMockSignInMvpView).showProfileNotFoundError(mAccount.name);
         verify(mMockSignInMvpView).showProgress(false);
         verify(mMockSignInMvpView).setSignInButtonEnabled(false);
     }
