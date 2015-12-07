@@ -86,11 +86,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     /***** MVP View methods implementation *****/
 
     @Override
-    public Context getViewContext() {
-        return this;
-    }
-
-    @Override
     public void onSignedOut() {
         startActivity(SignInActivity.getStartIntent(this, true));
     }

@@ -12,7 +12,6 @@ import dagger.Module;
 import dagger.Provides;
 import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.injection.ApplicationContext;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Provide application-level dependencies. Mainly singleton object that can be injected from
@@ -52,11 +51,6 @@ public class ApplicationModule {
     @Provides
     AccountManager provideAccountManager() {
         return AccountManager.get(mApplication);
-    }
-
-    @Provides
-    CompositeSubscription provideCompositeSubscription() {
-        return new CompositeSubscription();
     }
 
 }

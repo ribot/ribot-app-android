@@ -13,7 +13,6 @@ import dagger.Provides;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.injection.ApplicationContext;
-import rx.subscriptions.CompositeSubscription;
 
 import static org.mockito.Mockito.mock;
 
@@ -44,11 +43,6 @@ public class ApplicationTestModule {
     @Singleton
     Bus provideEventBus() {
         return new Bus();
-    }
-
-    @Provides
-    CompositeSubscription provideCompositeSubscription() {
-        return new CompositeSubscription();
     }
 
     /************* MOCKS *************/

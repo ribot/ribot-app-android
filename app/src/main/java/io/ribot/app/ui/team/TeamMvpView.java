@@ -13,5 +13,5 @@ public interface TeamMvpView extends MvpView {
 
     void showEmptyMessage();
 
-    void showRibotsError(String errorMessage);
+    void showRibotsError();
 }

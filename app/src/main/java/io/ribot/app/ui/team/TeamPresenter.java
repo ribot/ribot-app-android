@@ -1,14 +1,11 @@
 package io.ribot.app.ui.team;
 
 
-import android.content.Context;
-
 import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import io.ribot.app.R;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.ui.base.Presenter;
@@ -65,10 +62,8 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         Timber.e("There was an error retrieving the ribots " + e);
-                        Context context = mMvpView.getViewContext();
                         mMvpView.showRibotProgress(false);
-                        mMvpView.showRibotsError(
-                                context.getString(R.string.error_loading_ribots));
+                        mMvpView.showRibotsError();
                     }
 
                     @Override
