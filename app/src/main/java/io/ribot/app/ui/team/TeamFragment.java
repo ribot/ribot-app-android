@@ -1,7 +1,6 @@
 package io.ribot.app.ui.team;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -103,12 +102,8 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     }
 
     @Override
-    public void showRibotsError(String errorMessage) {
-        DialogFactory.createSimpleOkErrorDialog(getActivity(), errorMessage).show();
-    }
-
-    @Override
-    public Context getViewContext() {
-        return getActivity();
+    public void showRibotsError() {
+        DialogFactory.createSimpleOkErrorDialog(getActivity(),
+                getString(R.string.error_loading_ribots)).show();
     }
 }

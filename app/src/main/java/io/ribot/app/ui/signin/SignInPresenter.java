@@ -7,7 +7,6 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import javax.inject.Inject;
 
-import io.ribot.app.R;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.ui.base.Presenter;
@@ -66,11 +65,9 @@ public class SignInPresenter implements Presenter<SignInMvpView> {
                             if (NetworkUtil.isHttpStatusCode(e, 403)) {
                                 // Google Auth was successful, but the user does not have a ribot
                                 // profile set up.
-                                mMvpView.showError(mMvpView.getViewContext().getString(
-                                        R.string.error_ribot_profile_not_found, account.name));
+                                mMvpView.showProfileNotFoundError();
                             } else {
-                                mMvpView.showError(mMvpView.getViewContext()
-                                        .getString(R.string.error_sign_in));
+                                mMvpView.showGeneralSignInError();
                             }
                         }
                     }

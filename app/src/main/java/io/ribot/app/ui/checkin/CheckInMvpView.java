@@ -21,7 +21,7 @@ public interface CheckInMvpView extends MvpView {
 
     void showCheckInAtVenueSuccessful(Venue venue);
 
-    void showCheckInFailed(String errorMessage);
+    void showCheckInFailed();
 
     void showCheckInButton(boolean show);
 

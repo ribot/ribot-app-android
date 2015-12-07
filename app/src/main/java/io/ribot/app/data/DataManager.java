@@ -1,10 +1,6 @@
 package io.ribot.app.data;
 
 import android.accounts.Account;
-import android.os.Handler;
-import android.os.Looper;
-
-import com.squareup.otto.Bus;
 
 import java.util.List;
 
@@ -24,6 +20,7 @@ import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.data.remote.RibotService.SignInRequest;
 import io.ribot.app.data.remote.RibotService.SignInResponse;
 import io.ribot.app.util.DateUtil;
+import io.ribot.app.util.EventPosterHelper;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -35,19 +32,19 @@ public class DataManager {
     private final RibotService mRibotService;
     private final DatabaseHelper mDatabaseHelper;
     private final PreferencesHelper mPreferencesHelper;
-    private final Bus mBus;
+    private final EventPosterHelper mEventPoster;
     private final GoogleAuthHelper mGoogleAuthHelper;
 
     @Inject
     public DataManager(RibotService ribotService,
                        DatabaseHelper databaseHelper,
                        PreferencesHelper preferencesHelper,
-                       Bus bus,
+                       EventPosterHelper eventPosterHelper,
                        GoogleAuthHelper googleAuthHelper) {
         mRibotService = ribotService;
         mDatabaseHelper = databaseHelper;
         mPreferencesHelper = preferencesHelper;
-        mBus = bus;
+        mEventPoster = eventPosterHelper;
         mGoogleAuthHelper = googleAuthHelper;
     }
 
@@ -85,7 +82,7 @@ public class DataManager {
                     @Override
                     public void call() {
                         mPreferencesHelper.clear();
-                        postEventSafely(new BusEvent.UserSignedOut());
+                        mEventPoster.postEventSafely(new BusEvent.UserSignedOut());
                     }
                 });
     }
@@ -218,27 +215,18 @@ public class DataManager {
                         return mDatabaseHelper.setRegisteredBeacons(beacons);
                     }
                 })
-                .doOnCompleted(postEventAction(new BusEvent.BeaconsSyncCompleted()));
+                .doOnCompleted(postEventSafelyAction(new BusEvent.BeaconsSyncCompleted()));
     }
 
-    /// Helper method to post events from doOnCompleted.
-    private Action0 postEventAction(final Object event) {
+    //  Helper method to post events from doOnCompleted.
+    private Action0 postEventSafelyAction(final Object event) {
         return new Action0() {
             @Override
             public void call() {
-                postEventSafely(event);
+                mEventPoster.postEventSafely(event);
             }
         };
     }
 
-    // Helper method to post an event from a different thread to the main one.
-    private void postEventSafely(final Object event) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                mBus.post(event);
-            }
-        });
-    }
 
 }

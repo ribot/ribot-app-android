@@ -205,18 +205,19 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     }
 
     @Override
-    public Context getViewContext() {
-        return this;
-    }
-
-    @Override
     public void setSignInButtonEnabled(boolean enabled) {
         mSignInButton.setVisibility(enabled ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
-    public void showError(String message) {
-        DialogFactory.createGenericErrorDialog(this, message).show();
+    public void showProfileNotFoundError() {
+        DialogFactory.createGenericErrorDialog(this,
+                getString(R.string.error_ribot_profile_not_found)).show();
+    }
+
+    @Override
+    public void showGeneralSignInError() {
+        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_sign_in)).show();
     }
 
     /***** Private helper methods  *****/

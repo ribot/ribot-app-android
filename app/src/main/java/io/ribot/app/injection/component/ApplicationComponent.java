@@ -21,7 +21,6 @@ import io.ribot.app.injection.module.ApplicationModule;
 import io.ribot.app.service.AutoCheckInService;
 import io.ribot.app.service.BeaconsSyncService;
 import io.ribot.app.service.BootCompletedReceiver;
-import rx.subscriptions.CompositeSubscription;
 
 @Singleton
 @Component(modules = ApplicationModule.class)
@@ -42,5 +41,4 @@ public interface ApplicationComponent {
     Bus eventBus();
     AccountManager accountManager();
     GoogleAuthHelper googleAuthHelper();
-    CompositeSubscription compositeSubscription();
 }
