@@ -9,9 +9,6 @@ import org.junit.runners.model.Statement;
 
 import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
-import io.ribot.app.data.local.DatabaseHelper;
-import io.ribot.app.data.local.PreferencesHelper;
-import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.test.common.injection.component.DaggerTestComponent;
 import io.ribot.app.test.common.injection.component.TestComponent;
 import io.ribot.app.test.common.injection.module.ApplicationTestModule;
@@ -36,25 +33,12 @@ public class TestComponentRule implements TestRule {
         return mContext;
     }
 
-    public RibotService getMockRibotsService() {
-        return mTestComponent.ribotService();
-    }
-
     public AccountManager getMockAccountManager() {
         return mTestComponent.accountManager();
     }
 
-    //tODO remove
-    public DataManager getDataManager() {
+    public DataManager getMockDataManager() {
         return mTestComponent.dataManager();
-    }
-
-    public DatabaseHelper getDatabaseHelper() {
-        return mTestComponent.databaseHelper();
-    }
-
-    public PreferencesHelper getPreferencesHelper() {
-        return mTestComponent.preferencesHelper();
     }
 
     private void setupDaggerTestComponentInApplication() {

@@ -19,7 +19,6 @@ import java.util.List;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.Ribot;
-import io.ribot.app.test.common.ClearDataRule;
 import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.main.MainActivity;
@@ -40,19 +39,17 @@ public class MainActivityTest {
 
     public final TestComponentRule component =
             new TestComponentRule(InstrumentationRegistry.getTargetContext());
-    public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final ActivityTestRule<MainActivity> main =
             new ActivityTestRule<MainActivity>(MainActivity.class, false, false) {
                 @Override
                 protected void beforeActivityLaunched() {
-                    component.getPreferencesHelper().putSignedInRibot(MockModelFabric.newRibot());
+                    //component.getPreferencesHelper().putSignedInRibot(MockModelFabric.newRibot());
                 }
             };
     // TestComponentRule needs to go first so we make sure the ApplicationTestComponent is set
     // in the Application before any Activity is launched.
-    // ClearDataRule must run after the TestComponent is set up but before ActivityTestRule.
     @Rule
-    public TestRule chain = RuleChain.outerRule(component).around(clearDataRule).around(main);
+    public TestRule chain = RuleChain.outerRule(component).around(main);
 
     // This Intent starts the MainActivity without launching the auto check-in service so
     // we avoid problems with auto check-in service running in the background during tests.
@@ -62,11 +59,11 @@ public class MainActivityTest {
     @Test
     public void signOutSuccessful() {
         doReturn(Observable.just(MockModelFabric.newRibotList(17)))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .getRibots();
 
         doReturn(Observable.empty())
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .signOut();
 
         main.launchActivity(MAIN_ACTIVITY_INTENT);
@@ -97,7 +94,7 @@ public class MainActivityTest {
         // the same before comparing
         Collections.sort(ribotList);
         doReturn(Observable.just(ribotList))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .getRibots();
 
         main.launchActivity(MAIN_ACTIVITY_INTENT);
@@ -112,7 +109,7 @@ public class MainActivityTest {
     public void displayEmptyTeamGrid() {
         List<Ribot> emptyList = new ArrayList<>();
         doReturn(Observable.just(emptyList))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .getRibots();
 
         main.launchActivity(MAIN_ACTIVITY_INTENT);
@@ -124,7 +121,7 @@ public class MainActivityTest {
     @Test
     public void displayRibotsInTeamGridFailure() {
         doReturn(Observable.just(new RuntimeException()))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .getRibots();
 
         main.launchActivity(MAIN_ACTIVITY_INTENT);

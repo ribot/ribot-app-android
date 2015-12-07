@@ -4,12 +4,12 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -17,7 +17,6 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import io.ribot.app.data.model.Ribot;
-import io.ribot.app.test.common.ClearDataRule;
 import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.signin.SignInActivity;
@@ -33,25 +32,29 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExt
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 public class SignInActivityTest {
 
     public final TestComponentRule component =
             new TestComponentRule(InstrumentationRegistry.getTargetContext());
-    public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final IntentsTestRule<SignInActivity> main =
             new IntentsTestRule<>(SignInActivity.class, false, false);
     // TestComponentRule needs to go first so we make sure the ApplicationTestComponent is set
     // in the Application before any Activity is launched.
-    // ClearDataRule must run after the TestComponent is set up but before ActivityTestRule.
     @Rule
-    public TestRule chain = RuleChain.outerRule(component).around(clearDataRule).around(main);
+    public TestRule chain = RuleChain.outerRule(component).around(main);
 
-    private Account mSelectedAccount;
+    private final Account mSelectedAccount =
+            new Account("accounts@ribot.com", SignInActivity.ACCOUNT_TYPE_GOOGLE);
+
+    @Before
+    public void stubAccountManager() {
+        when(component.getMockAccountManager().getAccountsByType(mSelectedAccount.type))
+                .thenReturn(new Account[]{mSelectedAccount});
+    }
 
     @Test
     public void checkViewsDisplay() {
@@ -73,7 +76,7 @@ public class SignInActivityTest {
         // Stub sign in method in the DataManager
         Ribot ribot = MockModelFabric.newRibot();
         doReturn(Observable.just(ribot))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .signIn(mSelectedAccount);
 
         onView(withId(R.id.button_sign_in))
@@ -92,7 +95,7 @@ public class SignInActivityTest {
 
         // Stub an error when calling sign in
         doReturn(Observable.error(new RuntimeException("Error")))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .signIn(mSelectedAccount);
 
         onView(withId(R.id.button_sign_in))
@@ -109,7 +112,7 @@ public class SignInActivityTest {
         // Stub with http 403 error
         HttpException http403Exception = new HttpException(Response.error(403, null));
         doReturn(Observable.error(http403Exception))
-                .when(component.getDataManager())
+                .when(component.getMockDataManager())
                 .signIn(mSelectedAccount);
 
         onView(withId(R.id.button_sign_in))
@@ -135,10 +138,6 @@ public class SignInActivityTest {
         // Stub the account picker using Espresso intents.
         // It requires the test devices to be signed in into at least 1 Google account.
         Intent data = new Intent();
-        AccountManager accountManager = AccountManager
-                .get(InstrumentationRegistry.getTargetContext());
-        Account[] deviceAccounts = accountManager.getAccountsByType("com.google");
-        mSelectedAccount = deviceAccounts[0];
         data.putExtra(AccountManager.KEY_ACCOUNT_NAME, mSelectedAccount.name);
         ActivityResult result = new ActivityResult(Activity.RESULT_OK, data);
         // The account picker intent is a bit special and it doesn't seem to have an Action or

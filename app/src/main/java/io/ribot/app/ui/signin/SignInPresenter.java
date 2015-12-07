@@ -8,7 +8,6 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import javax.inject.Inject;
 
 import io.ribot.app.R;
-import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.ui.base.Presenter;

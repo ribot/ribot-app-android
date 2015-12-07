@@ -10,12 +10,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.ribot.app.data.DataManager;
 import io.ribot.app.data.remote.RibotService;
 import io.ribot.app.injection.ApplicationContext;
 import rx.subscriptions.CompositeSubscription;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 
 /**
  * Provides application-level dependencies for an app running on a testing environment
@@ -47,18 +47,27 @@ public class ApplicationTestModule {
     }
 
     @Provides
+    CompositeSubscription provideCompositeSubscription() {
+        return new CompositeSubscription();
+    }
+
+    /************* MOCKS *************/
+
+    @Provides
+    @Singleton
+    DataManager providesDataManager() {
+        return mock(DataManager.class);
+    }
+
+    @Provides
     @Singleton
     RibotService provideRibotService() {
         return mock(RibotService.class);
     }
 
     @Provides
+    @Singleton
     AccountManager provideAccountManager() {
         return mock(AccountManager.class);
-    }
-
-    @Provides
-    CompositeSubscription provideCompositeSubscription() {
-        return new CompositeSubscription();
     }
 }
