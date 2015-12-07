@@ -1,6 +1,5 @@
-package io.ribot.app.ui.adapter;
+package io.ribot.app.ui.team;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
@@ -24,10 +25,9 @@ import io.ribot.app.util.DateUtil;
 
 public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder> {
     private List<Ribot> mTeamMembers;
-    private Context mContext;
 
-    public RibotAdapter(Context context) {
-        this.mContext = context;
+    @Inject
+    public RibotAdapter() {
         this.mTeamMembers = new ArrayList<>();
     }
 
@@ -42,7 +42,7 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
     public void onBindViewHolder(final RibotHolder holder, final int position) {
         Ribot ribot = mTeamMembers.get(position);
         holder.name.setText(ribot.profile.name.first);
-        Picasso.with(mContext)
+        Picasso.with(holder.itemView.getContext())
                 .load(ribot.profile.avatar)
                 .fit()
                 .centerCrop()
@@ -59,7 +59,8 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
             holder.layoutContainer.setAlpha(1f);
         } else {
             holder.layoutContainer.setAlpha(0.4f);
-            holder.location.setText(mContext.getString(R.string.text_checked_out));
+            holder.location.setText(
+                    holder.itemView.getContext().getString(R.string.text_checked_out));
         }
     }
 
