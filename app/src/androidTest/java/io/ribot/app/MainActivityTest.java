@@ -40,12 +40,7 @@ public class MainActivityTest {
     public final TestComponentRule component =
             new TestComponentRule(InstrumentationRegistry.getTargetContext());
     public final ActivityTestRule<MainActivity> main =
-            new ActivityTestRule<MainActivity>(MainActivity.class, false, false) {
-                @Override
-                protected void beforeActivityLaunched() {
-                    //component.getPreferencesHelper().putSignedInRibot(MockModelFabric.newRibot());
-                }
-            };
+            new ActivityTestRule<MainActivity>(MainActivity.class, false, false);
     // TestComponentRule needs to go first so we make sure the ApplicationTestComponent is set
     // in the Application before any Activity is launched.
     @Rule
