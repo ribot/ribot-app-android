@@ -42,23 +42,16 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     private static final int REQUEST_CODE_AUTH_EXCEPTION = 4;
     public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 
-    @Inject
-    protected AccountManager mAccountManager;
-    @Inject
-    protected DataManager mDataManager;
-    @Inject
-    protected SignInPresenter mSignInPresenter;
+    @Inject AccountManager mAccountManager;
+    @Inject DataManager mDataManager;
+    @Inject SignInPresenter mSignInPresenter;
     private Account mSelectedAccount;
     private boolean mShouldFinishOnStop;
 
-    @Bind(R.id.button_sign_in)
-    Button mSignInButton;
-    @Bind(R.id.progress)
-    ProgressBar mProgressBar;
-    @Bind(R.id.text_welcome)
-    TextView mWelcomeTextView;
-    @Bind(R.id.image_ribot_logo)
-    ImageView mRibotLogo;
+    @Bind(R.id.button_sign_in) Button mSignInButton;
+    @Bind(R.id.progress) ProgressBar mProgressBar;
+    @Bind(R.id.text_welcome) TextView mWelcomeTextView;
+    @Bind(R.id.image_ribot_logo) ImageView mRibotLogo;
 
     public static Intent getStartIntent(Context context, boolean clearPreviousActivities) {
         Intent intent = new Intent(context, SignInActivity.class);
