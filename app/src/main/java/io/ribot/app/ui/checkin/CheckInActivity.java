@@ -1,6 +1,5 @@
 package io.ribot.app.ui.checkin;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -88,11 +87,6 @@ public class CheckInActivity extends BaseActivity
     /***** MVP View methods implementation *****/
 
     @Override
-    public Context getViewContext() {
-        return this;
-    }
-
-    @Override
     public void showVenues(List<Venue> venues, @Nullable String todayLatestCheckInVenueId) {
         mVenuesAdapter.setVenues(venues);
         mVenuesAdapter.notifyDataSetChanged();
@@ -139,8 +133,9 @@ public class CheckInActivity extends BaseActivity
     }
 
     @Override
-    public void showCheckInFailed(String errorMessage) {
-        DialogFactory.createGenericErrorDialog(this, errorMessage).show();
+    public void showCheckInFailed() {
+        DialogFactory.createGenericErrorDialog(this, getString(R.string.manual_check_in_error))
+                .show();
     }
 
     @Override

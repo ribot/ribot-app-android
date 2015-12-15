@@ -1,7 +1,6 @@
 package io.ribot.app.ui.team;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -19,34 +18,24 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
 import io.ribot.app.data.model.Ribot;
-import io.ribot.app.ui.adapter.RibotAdapter;
 import io.ribot.app.ui.base.BaseActivity;
 import io.ribot.app.util.DialogFactory;
 
 public class TeamFragment extends Fragment implements TeamMvpView {
 
-    @Inject
-    protected TeamPresenter mTeamPresenter;
-    private RibotAdapter mRibotAdapter;
+    @Inject TeamPresenter mTeamPresenter;
+    @Inject RibotAdapter mRibotAdapter;
 
-    @Bind(R.id.recycler_view_team)
-    RecyclerView mTeamRecycler;
-
-    @Bind(R.id.swipe_refresh_container)
-    SwipeRefreshLayout mSwipeRefreshContainer;
-
-    @Bind(R.id.text_no_ribots)
-    TextView mNoRibotsText;
-
-    @Bind(R.id.progress)
-    ProgressBar mProgress;
+    @Bind(R.id.recycler_view_team) RecyclerView mTeamRecycler;
+    @Bind(R.id.swipe_refresh_container) SwipeRefreshLayout mSwipeRefreshContainer;
+    @Bind(R.id.text_no_ribots) TextView mNoRibotsText;
+    @Bind(R.id.progress) ProgressBar mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         ((BaseActivity) getActivity()).activityComponent().inject(this);
-        mRibotAdapter = new RibotAdapter(getActivity());
     }
 
     @Override
@@ -103,12 +92,8 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     }
 
     @Override
-    public void showRibotsError(String errorMessage) {
-        DialogFactory.createSimpleOkErrorDialog(getActivity(), errorMessage).show();
-    }
-
-    @Override
-    public Context getViewContext() {
-        return getActivity();
+    public void showRibotsError() {
+        DialogFactory.createSimpleOkErrorDialog(getActivity(),
+                getString(R.string.error_loading_ribots)).show();
     }
 }

@@ -29,12 +29,9 @@ public class WelcomeActivity extends BaseActivity {
     private static final String EXTRA_TIME_DISPLAYING =
             "io.ribot.app.ui.WelcomeActivity.EXTRA_TIME_DISPLAYING";
 
-    @Bind(R.id.layout_profile_info)
-    View mProfileInfoLayout;
-    @Bind(R.id.image_profile)
-    CircleImageView mProfileImage;
-    @Bind(R.id.text_greeting)
-    TextView mGreetingText;
+    @Bind(R.id.layout_profile_info) View mProfileInfoLayout;
+    @Bind(R.id.image_profile) CircleImageView mProfileImage;
+    @Bind(R.id.text_greeting) TextView mGreetingText;
 
     private Handler mHandler;
     private long mTimeDisplaying;

@@ -16,6 +16,7 @@ import io.ribot.app.injection.module.ApplicationModule;
 import io.ribot.app.ui.signin.SignInActivity;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class RibotApplication extends Application  {
@@ -39,7 +40,7 @@ public class RibotApplication extends Application  {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
-        getComponent().inject(this);
+        mApplicationComponent.inject(this);
         mEventBus.register(this);
     }
 
@@ -60,7 +61,7 @@ public class RibotApplication extends Application  {
     public void onAuthenticationError(BusEvent.AuthenticationError event) {
         mDataManager.signOut()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {

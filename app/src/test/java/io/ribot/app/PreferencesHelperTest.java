@@ -1,7 +1,6 @@
 package io.ribot.app;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -17,7 +16,6 @@ import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
 import io.ribot.app.test.common.MockModelFabric;
-import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.util.DefaultConfig;
 import rx.observers.TestSubscriber;
 
@@ -28,15 +26,11 @@ import static org.junit.Assert.assertNull;
 @Config(constants = BuildConfig.class, sdk = DefaultConfig.EMULATE_SDK)
 public class PreferencesHelperTest {
 
-    PreferencesHelper mPreferencesHelper;
-
-    @Rule
-    public final TestComponentRule component =
-            new TestComponentRule((RibotApplication) RuntimeEnvironment.application);
+    final PreferencesHelper mPreferencesHelper =
+            new PreferencesHelper(RuntimeEnvironment.application);
 
     @Before
     public void setUp() {
-        mPreferencesHelper = component.getPreferencesHelper();
         mPreferencesHelper.clear();
     }
 

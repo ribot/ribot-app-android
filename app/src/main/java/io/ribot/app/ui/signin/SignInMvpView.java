@@ -11,6 +11,7 @@ public interface SignInMvpView extends MvpView {
     void onUserRecoverableAuthException(Intent recoverIntent);
     void showProgress(boolean show);
     void setSignInButtonEnabled(boolean enabled);
-    void showError(String message);
+    void showProfileNotFoundError(String accountName);
+    void showGeneralSignInError();
 
 }

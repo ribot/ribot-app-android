@@ -3,42 +3,24 @@ apply from: '../config/quality/quality.gradle'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'com.neenbedankt.android-apt'
 
-//Setup distribution options, based on local variable $ANDROID_DISTRIBUTION
-enum DISTRIBUTION_CHANNEL {
-    PLAY
-}
-
-def distribution = System.getenv('ANDROID_DISTRIBUTION')
-def distributionChannel
-def distributionGroup
-if (distribution != null) {
-    if (distribution.startsWith('play')) {
-        distributionChannel = DISTRIBUTION_CHANNEL.PLAY
+repositories {
+    flatDir {
+        dirs 'libs'
     }
-    distributionGroup = distribution.substring(distribution.indexOf('-') + 1)
 }
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId 'io.ribot.app'
         minSdkVersion 19
         targetSdkVersion 23
-        testInstrumentationRunner 'io.ribot.app.util.UnlockDeviceTestRunner'
+        testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
         versionCode 5000
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
         versionName '0.5.0'
-
-        def externalVersionNameSuffix = System.getenv('VERSION_NAME_SUFFIX');
-        if (externalVersionNameSuffix != null) versionName += '.' + externalVersionNameSuffix
-
-        if (distributionGroup != null
-                && !(distributionChannel == DISTRIBUTION_CHANNEL.PLAY
-                && distributionGroup.equals('production'))) {
-            versionName += '.' + distribution
-        }
     }
 
     signingConfigs {
@@ -107,19 +89,16 @@ android {
 }
 
 play {
-    if (distributionGroup != null && distributionChannel == DISTRIBUTION_CHANNEL.PLAY) {
-        track = distributionGroup
-    } else {
-        track = 'alpha'
-    }
+    track = 'alpha'
     serviceAccountEmail = '***REMOVED***'
     pk12File = file('keystore/play_store.p12')
 }
 
 dependencies {
-    final PLAY_SERVICES_VERSION = '8.1.0'
-    final SUPPORT_LIBRARY_VERSION = '23.1.0'
+    final PLAY_SERVICES_VERSION = '8.3.0'
+    final SUPPORT_LIBRARY_VERSION = '23.1.1'
     final RETROFIT_VERSION = '2.0.0-beta2'
+    final OKHTTP_VERSION = '2.6.0'
     final DAGGER_VERSION = '2.0.1'
     final DEXMAKER_VERSION = '1.4'
     final HAMCREST_VERSION = '1.3'
@@ -141,11 +120,18 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:adapter-rxjava:$RETROFIT_VERSION"
+    compile "com.squareup.okhttp:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp:logging-interceptor:$OKHTTP_VERSION"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.sqlbrite:sqlbrite:0.3.1'
     compile 'com.squareup:otto:1.3.8'
-    compile 'io.reactivex:rxandroid:1.0.1'
+    // Uses a compiled aar version of latest RxAndroid because fix for issue #238
+    // is not in maven central yet
+    // TODO replace when they push new version to maven central and remove AAR
+    //compile 'io.reactivex:rxandroid:1.0.1'
+    compile(name:'rxandroid-release', ext:'aar')
+    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:3.1.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'

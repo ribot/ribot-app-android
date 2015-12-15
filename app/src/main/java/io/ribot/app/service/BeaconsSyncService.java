@@ -21,8 +21,7 @@ public class BeaconsSyncService extends Service {
 
     private Subscription mSubscription;
 
-    @Inject
-    DataManager mDataManager;
+    @Inject DataManager mDataManager;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, BeaconsSyncService.class);
@@ -51,7 +50,7 @@ public class BeaconsSyncService extends Service {
 
         if (mSubscription != null && !mSubscription.isUnsubscribed()) mSubscription.unsubscribe();
         mSubscription = mDataManager.syncRegisteredBeacons()
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
                 // Can removed once issue fixed
                 .unsubscribeOn(Schedulers.io())

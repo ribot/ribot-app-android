@@ -40,25 +40,18 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     private static final int REQUEST_PERMISSION_GET_ACCOUNTS = 2;
     private static final int REQUEST_CODE_ACCOUNT_PICKER = 3;
     private static final int REQUEST_CODE_AUTH_EXCEPTION = 4;
-    private static final String ACCOUNT_TYPE_GOOGLE = "com.google";
+    public static final String ACCOUNT_TYPE_GOOGLE = "com.google";
 
-    @Inject
-    protected AccountManager mAccountManager;
-    @Inject
-    protected DataManager mDataManager;
-    @Inject
-    protected SignInPresenter mSignInPresenter;
+    @Inject AccountManager mAccountManager;
+    @Inject DataManager mDataManager;
+    @Inject SignInPresenter mSignInPresenter;
     private Account mSelectedAccount;
     private boolean mShouldFinishOnStop;
 
-    @Bind(R.id.button_sign_in)
-    Button mSignInButton;
-    @Bind(R.id.progress)
-    ProgressBar mProgressBar;
-    @Bind(R.id.text_welcome)
-    TextView mWelcomeTextView;
-    @Bind(R.id.image_ribot_logo)
-    ImageView mRibotLogo;
+    @Bind(R.id.button_sign_in) Button mSignInButton;
+    @Bind(R.id.progress) ProgressBar mProgressBar;
+    @Bind(R.id.text_welcome) TextView mWelcomeTextView;
+    @Bind(R.id.image_ribot_logo) ImageView mRibotLogo;
 
     public static Intent getStartIntent(Context context, boolean clearPreviousActivities) {
         Intent intent = new Intent(context, SignInActivity.class);
@@ -205,18 +198,19 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     }
 
     @Override
-    public Context getViewContext() {
-        return this;
-    }
-
-    @Override
     public void setSignInButtonEnabled(boolean enabled) {
         mSignInButton.setVisibility(enabled ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
-    public void showError(String message) {
-        DialogFactory.createGenericErrorDialog(this, message).show();
+    public void showProfileNotFoundError(String accountName) {
+        DialogFactory.createGenericErrorDialog(this,
+                getString(R.string.error_ribot_profile_not_found, accountName)).show();
+    }
+
+    @Override
+    public void showGeneralSignInError() {
+        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_sign_in)).show();
     }
 
     /***** Private helper methods  *****/
