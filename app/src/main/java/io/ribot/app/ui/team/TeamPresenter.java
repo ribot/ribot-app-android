@@ -85,10 +85,7 @@ public class TeamPresenter implements Presenter<TeamMvpView> {
         } else {
             return mDataManager.getRibots()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
-                    // Can removed once issue fixed
-                    .unsubscribeOn(Schedulers.io());
+                    .subscribeOn(Schedulers.io());
         }
     }
 }

@@ -5,18 +5,12 @@ import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
-import io.ribot.app.BuildConfig;
+import timber.log.Timber;
 
 public class AndroidComponentUtil {
 
-    public static final String TAG = "ComponentUtil";
-
     public static void toggleComponent(Context context, Class componentClass, boolean enable) {
-        if (BuildConfig.DEBUG) {
-            Log.i(TAG, (enable ? "Enabling " : "Disabling ") + componentClass.getSimpleName());
-        }
         ComponentName componentName = new ComponentName(context, componentClass);
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(componentName,

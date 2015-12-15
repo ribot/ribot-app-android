@@ -22,6 +22,7 @@ import io.ribot.app.R;
 import io.ribot.app.data.model.Profile;
 import io.ribot.app.ui.base.BaseActivity;
 import io.ribot.app.ui.main.MainActivity;
+import timber.log.Timber;
 
 public class WelcomeActivity extends BaseActivity {
 
@@ -60,13 +61,15 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
         // Set profile values in views
-        Profile profile = getIntent().getParcelableExtra(EXTRA_PROFILE);
-        mTimeDisplaying = getIntent().getLongExtra(EXTRA_TIME_DISPLAYING, -1);
+        Intent intent = getIntent();
+        Profile profile = intent.getParcelableExtra(EXTRA_PROFILE);
+        mTimeDisplaying = intent.getLongExtra(EXTRA_TIME_DISPLAYING, -1);
         mGreetingText.setText(getString(R.string.welcome_greetings, profile.name.first));
         loadProfileImage(profile.avatar);
-        if (profile.hexColor != null) {
-            mProfileInfoLayout.setBackgroundColor(Color.parseColor(profile.hexColor));
-        }
+
+        String hexColor = profile.hexColor;
+        if (hexColor != null) mProfileInfoLayout.setBackgroundColor(Color.parseColor(hexColor));
+
         mHandler = new Handler();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // We need to start the reveal animation from the listener so we make sure the view
@@ -112,7 +115,7 @@ public class WelcomeActivity extends BaseActivity {
 
                     @Override
                     public void onError() {
-
+                        Timber.e("There was an error loading the profile image");
                     }
                 });
     }
@@ -132,7 +135,7 @@ public class WelcomeActivity extends BaseActivity {
     private Runnable mNavigateToMainActivity = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+            Intent intent = MainActivity.getStartIntent(WelcomeActivity.this, false);
             startActivity(intent);
             finish();
         }

@@ -3,8 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <!-- Designs seem to be using the primary as the accent color, is this right? -->
-        <item name="colorAccent">@color/primary</item>
+        <item name="colorAccent">@color/accent</item>
         <item name="android:windowBackground">@color/background_dark</item>
     </style>
 
@@ -13,13 +12,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.WindowTransitions">
-
-    </style>
-
     <style name="BlueButtonStyle" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/primary_dark</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.WindowTransitions">
+
     </style>
 
     <style name="ProgressWhite" parent="Widget.AppCompat.ProgressBar">

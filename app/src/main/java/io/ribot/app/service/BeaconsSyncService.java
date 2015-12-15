@@ -19,9 +19,9 @@ import timber.log.Timber;
 
 public class BeaconsSyncService extends Service {
 
-    private Subscription mSubscription;
-
     @Inject DataManager mDataManager;
+
+    private Subscription mSubscription;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, BeaconsSyncService.class);
@@ -51,9 +51,6 @@ public class BeaconsSyncService extends Service {
         if (mSubscription != null && !mSubscription.isUnsubscribed()) mSubscription.unsubscribe();
         mSubscription = mDataManager.syncRegisteredBeacons()
                 .subscribeOn(Schedulers.io())
-                // Workaround for Retrofit https://github.com/square/retrofit/issues/1069
-                // Can removed once issue fixed
-                .unsubscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Void>() {
                     @Override
                     public void onCompleted() {
