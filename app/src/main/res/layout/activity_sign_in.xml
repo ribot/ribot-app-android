@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -18,8 +19,8 @@
             android:id="@+id/image_ribot_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:transitionName="@string/transition_ribot_logo"
-            android:src="@drawable/ribot_logo_large" />
+            android:src="@drawable/ribot_logo_large"
+            android:transitionName="@string/transition_ribot_logo" />
 
         <TextView
             android:id="@+id/text_welcome"
@@ -27,10 +28,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="13dp"
-            android:text="@string/sign_in_message"
             android:fontFamily="sans-serif-light"
+            android:text="@string/sign_in_message"
             android:textColor="@color/white"
-            android:textSize="26sp" />
+            android:textSize="@dimen/text_large_headline" />
 
     </LinearLayout>
 
@@ -53,7 +54,7 @@
         android:minWidth="200dp"
         android:padding="20dp"
         android:text="@string/action_sign_in"
-        android:textSize="18sp"
+        android:textSize="@dimen/text_large_body"
         android:theme="@style/BlueButtonStyle"
         app:layout_marginLeftPercent="8%"
         app:layout_marginRightPercent="8%" />

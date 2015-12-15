@@ -23,8 +23,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     private static final String EXTRA_AUTO_CHECK_IN_DISABLED =
             "io.ribot.app.ui.main.MainActivity.EXTRA_AUTO_CHECK_IN_DISABLED";
 
-    @Inject
-    MainPresenter mMainPresenter;
+    @Inject MainPresenter mMainPresenter;
 
     /**
      * Create an Intent for the main activity.

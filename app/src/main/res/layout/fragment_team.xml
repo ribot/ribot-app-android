@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -7,13 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <io.ribot.app.ui.widget.GridRecyclerView
-                android:id="@+id/recycler_view_team"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/team_item_padding"
-                android:clipToPadding="false"
-                android:columnWidth="@dimen/team_column_width"/>
+        <io.ribot.app.ui.widget.GridRecyclerView
+            android:id="@+id/recycler_view_team"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:columnWidth="@dimen/team_column_width"
+            android:padding="@dimen/team_item_padding" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -25,7 +26,7 @@
         android:text="@string/message_no_ribots"
         android:textColor="@color/white"
         android:textSize="@dimen/text_body"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progress"
