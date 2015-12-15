@@ -1,4 +1,4 @@
-package io.ribot.app.injection.scope;
+package io.ribot.app.injection;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

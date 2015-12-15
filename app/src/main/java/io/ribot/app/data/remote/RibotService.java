@@ -5,9 +5,11 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.List;
 
+import io.ribot.app.BuildConfig;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;
 import io.ribot.app.data.model.Encounter;
@@ -59,12 +61,16 @@ public interface RibotService {
             @Header(AUTH_HEADER) String authorization);
 
 
-    /******** Instance class that sets up a new ribot services *******/
-    class Instance {
+    /******** Factory class that sets up a new ribot services *******/
+    class Factory {
 
-        public static RibotService newRibotService(Context context) {
+        public static RibotService makeRibotService(Context context) {
             OkHttpClient okHttpClient = new OkHttpClient();
             okHttpClient.interceptors().add(new UnauthorisedInterceptor(context));
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY
+                    : HttpLoggingInterceptor.Level.NONE);
+            okHttpClient.interceptors().add(logging);
 
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -77,6 +83,7 @@ public interface RibotService {
                     .build();
             return retrofit.create(RibotService.class);
         }
+
     }
 
     class Util {

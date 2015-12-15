@@ -6,44 +6,40 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.ribot.app.R;
-import io.ribot.app.RibotApplication;
 import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.CheckIn;
 import io.ribot.app.data.model.CheckInRequest;
 import io.ribot.app.data.model.Venue;
-import io.ribot.app.ui.base.Presenter;
+import io.ribot.app.ui.base.BasePresenter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class CheckInPresenter implements Presenter<CheckInMvpView> {
+public class CheckInPresenter extends BasePresenter<CheckInMvpView> {
+
+    private final CompositeSubscription mSubscriptions;
+    private final DataManager mDataManager;
 
     @Inject
-    protected DataManager mDataManager;
-    @Inject
-    protected CompositeSubscription mSubscriptions;
-    private CheckInMvpView mMvpView;
-
-    @Override
-    public void attachView(CheckInMvpView mvpView) {
-        mMvpView = mvpView;
-        RibotApplication.get(mMvpView.getViewContext()).getComponent().inject(this);
+    public CheckInPresenter(DataManager dataManager) {
+        mDataManager = dataManager;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
     public void detachView() {
-        mMvpView = null;
+        super.detachView();
         mSubscriptions.unsubscribe();
     }
 
     public void loadVenues() {
-        mMvpView.showVenuesProgress(true);
+        getMvpView().showVenuesProgress(true);
         mSubscriptions.add(Observable.combineLatest(
                 getTodayLatestCheckInAtVenue().defaultIfEmpty(null), mDataManager.getVenues(),
                 new Func2<CheckIn, List<Venue>, VenuesInfo>() {
@@ -53,7 +49,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<VenuesInfo>() {
                     @Override
                     public void onCompleted() {
@@ -63,21 +59,21 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         Timber.e("Error loading venues " + e);
-                        mMvpView.showVenuesProgress(false);
+                        getMvpView().showVenuesProgress(false);
                     }
 
                     @Override
                     public void onNext(VenuesInfo venuesInfo) {
-                        mMvpView.showVenues(
+                        getMvpView().showVenues(
                                 venuesInfo.listVenues,
                                 venuesInfo.getTodayLatestCheckInAtVenueId());
-                        mMvpView.showVenuesProgress(false);
+                        getMvpView().showVenuesProgress(false);
                     }
                 }));
     }
 
     public void checkIn(String locationName) {
-        mMvpView.showCheckInButton(false);
+        getMvpView().showCheckInButton(false);
         doCheckIn(CheckInRequest.fromLabel(locationName.trim()));
     }
 
@@ -89,7 +85,7 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
         showCheckInProgress(true, checkInRequest);
         mSubscriptions.add(mDataManager.checkIn(checkInRequest)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<CheckIn>() {
                     @Override
                     public void onCompleted() {
@@ -100,12 +96,10 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     public void onError(Throwable e) {
                         Timber.e("Error checking in manually " + e);
                         showCheckInProgress(false, checkInRequest);
-                        String errorMsg = mMvpView.getViewContext()
-                                .getString(R.string.manual_check_in_error);
-                        mMvpView.showCheckInFailed(errorMsg);
+                        getMvpView().showCheckInFailed();
                         // if it's a label (typing) request, we make sure we enable the button again
                         if (checkInRequest.getLabel() != null) {
-                            mMvpView.showCheckInButton(true);
+                            getMvpView().showCheckInButton(true);
                         }
                     }
 
@@ -127,11 +121,11 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Action1<CheckIn>() {
                     @Override
                     public void call(CheckIn checkIn) {
-                        mMvpView.showTodayLatestCheckInWithLabel(checkIn.label);
+                        getMvpView().showTodayLatestCheckInWithLabel(checkIn.label);
                     }
                 }));
     }
@@ -149,17 +143,17 @@ public class CheckInPresenter implements Presenter<CheckInMvpView> {
 
     private void showCheckInProgress(boolean show, CheckInRequest checkInRequest) {
         if (checkInRequest.getVenueId() != null) {
-            mMvpView.showCheckInAtVenueProgress(show, checkInRequest.getVenueId());
+            getMvpView().showCheckInAtVenueProgress(show, checkInRequest.getVenueId());
         } else {
-            mMvpView.showCheckInProgress(show);
+            getMvpView().showCheckInProgress(show);
         }
     }
 
     private void showCheckInSuccessful(CheckIn checkIn) {
         if (checkIn.hasVenue()) {
-            mMvpView.showCheckInAtVenueSuccessful(checkIn.venue);
+            getMvpView().showCheckInAtVenueSuccessful(checkIn.venue);
         } else {
-            mMvpView.showCheckInSuccessful(checkIn.label);
+            getMvpView().showCheckInSuccessful(checkIn.label);
         }
     }
 

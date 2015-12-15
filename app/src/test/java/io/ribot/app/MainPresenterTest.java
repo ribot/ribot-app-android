@@ -5,45 +5,31 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import io.ribot.app.data.model.Ribot;
-import io.ribot.app.test.common.MockModelFabric;
-import io.ribot.app.test.common.TestComponentRule;
+import io.ribot.app.data.DataManager;
 import io.ribot.app.ui.main.MainMvpView;
 import io.ribot.app.ui.main.MainPresenter;
-import io.ribot.app.util.DefaultConfig;
+import io.ribot.app.util.RxSchedulersOverrideRule;
 import rx.Observable;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = DefaultConfig.EMULATE_SDK)
+@RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest {
 
+    @Mock MainMvpView mMockMainMvpView;
+    @Mock DataManager mMockDataManager;
     private MainPresenter mMainPresenter;
-    private MainMvpView mMockMainMvpView;
-    private Ribot mSignedInRibot;
 
-    // We mock the DataManager because there is not need to test the dataManager again
-    // from the presenters because there is already a DataManagerTest class.
     @Rule
-    public final TestComponentRule component =
-            new TestComponentRule((RibotApplication) RuntimeEnvironment.application, true);
+    public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
 
     @Before
     public void setUp() {
-        mMockMainMvpView = mock(MainMvpView.class);
-        when(mMockMainMvpView.getViewContext()).thenReturn(RuntimeEnvironment.application);
-        mMainPresenter = new MainPresenter();
-        mSignedInRibot = MockModelFabric.newRibot();
-        //Emulate a signed in user
-        component.getPreferencesHelper().putSignedInRibot(mSignedInRibot);
+        mMainPresenter = new MainPresenter(mMockDataManager);
         mMainPresenter.attachView(mMockMainMvpView);
     }
 
@@ -55,7 +41,7 @@ public class MainPresenterTest {
     @Test
     public void signOutSuccessful() {
         doReturn(Observable.empty())
-                .when(component.getDataManager())
+                .when(mMockDataManager)
                 .signOut();
 
         mMainPresenter.signOut();

@@ -1,6 +1,5 @@
 package io.ribot.app.data.local;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.squareup.sqlbrite.BriteDatabase;
@@ -8,16 +7,21 @@ import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.ribot.app.data.model.RegisteredBeacon;
 import rx.Observable;
 import rx.Subscriber;
 
+@Singleton
 public class DatabaseHelper {
 
-    private BriteDatabase mDb;
+    private final BriteDatabase mDb;
 
-    public DatabaseHelper(Context context) {
-        mDb = SqlBrite.create().wrapDatabaseHelper(new DbOpenHelper(context));
+    @Inject
+    public DatabaseHelper(DbOpenHelper dbOpenHelper) {
+        mDb = SqlBrite.create().wrapDatabaseHelper(dbOpenHelper);
     }
 
     public BriteDatabase getBriteDb() {

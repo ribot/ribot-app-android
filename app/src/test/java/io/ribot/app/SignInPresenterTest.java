@@ -1,7 +1,6 @@
 package io.ribot.app;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.content.Intent;
 
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -11,48 +10,38 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import io.ribot.app.data.DataManager;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.test.common.MockModelFabric;
-import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.signin.SignInMvpView;
 import io.ribot.app.ui.signin.SignInPresenter;
-import io.ribot.app.util.DefaultConfig;
+import io.ribot.app.util.RxSchedulersOverrideRule;
 import retrofit.HttpException;
 import retrofit.Response;
 import rx.Observable;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = DefaultConfig.EMULATE_SDK)
+@RunWith(MockitoJUnitRunner.class)
 public class SignInPresenterTest {
 
+    @Mock SignInMvpView mMockSignInMvpView;
+    @Mock DataManager mMockDataManager;
     private SignInPresenter mSignInPresenter;
-    private SignInMvpView mMockSignInMvpView;
-    private Account mAccount;
+    private final Account mAccount = new Account("accounts@ribot.co.uk", "com.google");
 
-    // We mock the DataManager because there is not need to test the dataManager again
-    // from the presenters because there is already a DataManagerTest class.
     @Rule
-    public final TestComponentRule component =
-            new TestComponentRule((RibotApplication) RuntimeEnvironment.application, true);
+    public final RxSchedulersOverrideRule mOverrideSchedulersRule = new RxSchedulersOverrideRule();
 
     @Before
     public void setUp() {
-        mMockSignInMvpView = mock(SignInMvpView.class);
-        when(mMockSignInMvpView.getViewContext()).thenReturn(RuntimeEnvironment.application);
-        mSignInPresenter = new SignInPresenter();
+        mSignInPresenter = new SignInPresenter(mMockDataManager);
         mSignInPresenter.attachView(mMockSignInMvpView);
-        mAccount = new Account("ivan@ribot.co.uk", "com.google");
     }
 
     @After
@@ -65,9 +54,7 @@ public class SignInPresenterTest {
         //Stub mock data manager
 
         Ribot ribot = MockModelFabric.newRibot();
-        doReturn(Observable.just(ribot))
-                .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mAccount));
+        stubDataManagerSignIn(Observable.just(ribot));
 
         mSignInPresenter.signInWithGoogle(mAccount);
         //Check that the right methods are called
@@ -82,14 +69,12 @@ public class SignInPresenterTest {
         //Stub mock data manager
         Intent intent = new Intent();
         UserRecoverableAuthException exception = new UserRecoverableAuthException("error", intent);
-        doReturn(Observable.error(exception))
-                .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mAccount));
+        stubDataManagerSignIn(Observable.error(exception));
 
         mSignInPresenter.signInWithGoogle(mAccount);
         //Check that the right methods are called
         verify(mMockSignInMvpView).showProgress(true);
-        verify(mMockSignInMvpView).onUserRecoverableAuthException(intent);
+        verify(mMockSignInMvpView).onUserRecoverableAuthException(any(Intent.class));
         verify(mMockSignInMvpView).showProgress(false);
         verify(mMockSignInMvpView).setSignInButtonEnabled(false);
     }
@@ -97,16 +82,13 @@ public class SignInPresenterTest {
     @Test
     public void signInFailedWithGeneralErrorMessage() {
         //Stub mock data manager
-        doReturn(Observable.error(new RuntimeException("error")))
-                .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mAccount));
+        stubDataManagerSignIn(Observable.error(new RuntimeException("error")));
 
         mSignInPresenter.signInWithGoogle(mAccount);
         //Check that the right methods are called
         verify(mMockSignInMvpView).showProgress(true);
         verify(mMockSignInMvpView).setSignInButtonEnabled(true);
-        verify(mMockSignInMvpView)
-                .showError(RuntimeEnvironment.application.getString(R.string.error_sign_in));
+        verify(mMockSignInMvpView).showGeneralSignInError();
         verify(mMockSignInMvpView).showProgress(false);
         verify(mMockSignInMvpView).setSignInButtonEnabled(false);
     }
@@ -115,19 +97,21 @@ public class SignInPresenterTest {
     public void signInFailedWithRibotProfileNotFoundError() {
         //Stub mock data manager
         HttpException http403Exception = new HttpException(Response.error(403, null));
-        doReturn(Observable.error(http403Exception))
-                .when(component.getDataManager())
-                .signIn(any(Context.class), eq(mAccount));
+        stubDataManagerSignIn(Observable.error(http403Exception));
 
         mSignInPresenter.signInWithGoogle(mAccount);
         //Check that the right methods are called
         verify(mMockSignInMvpView).showProgress(true);
         verify(mMockSignInMvpView).setSignInButtonEnabled(true);
-        String expectedError = RuntimeEnvironment.application
-                .getString(R.string.error_ribot_profile_not_found, mAccount.name);
-        verify(mMockSignInMvpView).showError(expectedError);
+        verify(mMockSignInMvpView).showProfileNotFoundError(mAccount.name);
         verify(mMockSignInMvpView).showProgress(false);
         verify(mMockSignInMvpView).setSignInButtonEnabled(false);
+    }
+
+    private void stubDataManagerSignIn(Observable observable) {
+        doReturn(observable)
+                .when(mMockDataManager)
+                .signIn(mAccount);
     }
 
 }
