@@ -36,16 +36,11 @@ public class CheckInActivity extends BaseActivity
     @Inject
     protected CheckInPresenter mCheckInPresenter;
 
-    @Bind(R.id.edit_text_location)
-    EditText mEditTextLocation;
-    @Bind(R.id.recycler_view_venues)
-    RecyclerView mRecyclerViewVenues;
-    @Bind(R.id.progress_venues)
-    ProgressBar mProgressVenues;
-    @Bind(R.id.progress_check_in)
-    ProgressBar mProgressCheckIn;
-    @Bind(R.id.fab_check_in)
-    FloatingActionButton mFabCheckIn;
+    @Bind(R.id.edit_text_location) EditText mEditTextLocation;
+    @Bind(R.id.fab_check_in) FloatingActionButton mFabCheckIn;
+    @Bind(R.id.progress_venues) ProgressBar mProgressVenues;
+    @Bind(R.id.progress_check_in) ProgressBar mProgressCheckIn;
+    @Bind(R.id.recycler_view_venues) RecyclerView mRecyclerViewVenues;
 
     private VenuesAdapter mVenuesAdapter;
 
@@ -134,7 +129,7 @@ public class CheckInActivity extends BaseActivity
 
     @Override
     public void showCheckInFailed() {
-        DialogFactory.createGenericErrorDialog(this, getString(R.string.manual_check_in_error))
+        DialogFactory.createSimpleOkErrorDialog(this, getString(R.string.manual_check_in_error))
                 .show();
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fragment
-    android:name="io.ribot.app.ui.team.TeamFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/team_fragment"
+    android:name="io.ribot.app.ui.team.TeamFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent" />

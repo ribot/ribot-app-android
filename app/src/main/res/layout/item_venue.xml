@@ -4,10 +4,10 @@
     android:id="@+id/layout_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:paddingLeft="19dp"
-    android:paddingRight="19dp"
-    android:background="?attr/selectableItemBackground">
+    android:paddingRight="19dp">
 
     <ImageView
         android:id="@+id/image_venue_tick"
@@ -15,24 +15,24 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:src="@drawable/ic_tick"
         android:visibility="invisible"
-        tools:visibility="visible"
-        android:src="@drawable/ic_tick" />
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/text_venue_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/image_venue_tick"
         android:layout_alignParentStart="true"
-        android:textSize="17sp"
-        android:textColor="@color/white"
-        android:drawableStart="@drawable/ic_place"
+        android:layout_toStartOf="@id/image_venue_tick"
         android:drawablePadding="30dp"
+        android:drawableStart="@drawable/ic_place"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingBottom="@dimen/item_venue_vertical_padding"
         android:paddingTop="@dimen/item_venue_vertical_padding"
-        android:maxLines="1"
-        android:ellipsize="end"
+        android:textColor="@color/white"
+        android:textSize="17sp"
         tools:text="Small Batch" />
 
     <ProgressBar

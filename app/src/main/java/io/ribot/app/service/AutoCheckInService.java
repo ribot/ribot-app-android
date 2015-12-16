@@ -50,8 +50,8 @@ public class AutoCheckInService extends Service implements
     private Subscription mBeaconsUuidSubscription;
     private Set<String> mMonitoredRegionsUuids;
 
-    @Inject DataManager mDataManager;
     @Inject Bus mBus;
+    @Inject DataManager mDataManager;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AutoCheckInService.class);

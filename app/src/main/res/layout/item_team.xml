@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/layout_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/team_item_padding">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/team_item_padding">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_image_profile_main"
@@ -12,8 +13,8 @@
         android:layout_height="@dimen/team_image_medium"
         android:layout_centerHorizontal="true"
         android:src="@drawable/profile_placeholder_large"
-        app:civ_border_width="3dp"
-        app:civ_border_color="@color/white"/>
+        app:civ_border_color="@color/white"
+        app:civ_border_width="3dp" />
 
     <TextView
         android:id="@+id/text_name"
@@ -26,7 +27,7 @@
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/text_body_big"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/text_location"
@@ -34,11 +35,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/text_name"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Desks"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_tiny_body"/>
+        android:textSize="@dimen/text_tiny_body"
+        tools:text="Desks" />
 
 </RelativeLayout>
