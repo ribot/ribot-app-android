@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
-    android:orientation="vertical">
+    android:background="@color/primary">
 
     <RelativeLayout
         android:id="@+id/layout_profile_info"
@@ -32,7 +31,7 @@
             android:layout_marginTop="22dp"
             android:fontFamily="sans-serif-light"
             android:textColor="@color/white"
-            android:textSize="26sp"
+            android:textSize="@dimen/text_large_headline"
             tools:text="Hi Matt!" />
 
     </RelativeLayout>

@@ -20,7 +20,7 @@ public class LauncherActivity extends BaseActivity {
         activityComponent().inject(this);
         Intent intent;
         if (mDataManager.getPreferencesHelper().getAccessToken() != null) {
-            intent = new Intent(this, MainActivity.class);
+            intent = MainActivity.getStartIntent(this, false);
         } else {
             intent = SignInActivity.getStartIntent(this, false);
         }

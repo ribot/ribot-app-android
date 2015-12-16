@@ -4,7 +4,9 @@ import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -88,6 +90,7 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
                     .getErrorDialog(resultCode, this, REQUEST_CODE_PLAY_SERVICES)
                     .show();
         } else {
+            showNoPlayServicesError();
             Timber.e("This device doesn't support Play Services");
         }
 
@@ -204,13 +207,13 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
 
     @Override
     public void showProfileNotFoundError(String accountName) {
-        DialogFactory.createGenericErrorDialog(this,
+        DialogFactory.createSimpleOkErrorDialog(this,
                 getString(R.string.error_ribot_profile_not_found, accountName)).show();
     }
 
     @Override
     public void showGeneralSignInError() {
-        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_sign_in)).show();
+        DialogFactory.createSimpleOkErrorDialog(this, getString(R.string.error_sign_in)).show();
     }
 
     /***** Private helper methods  *****/
@@ -233,5 +236,20 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
             }
         }
         return null;
+    }
+
+    private void showNoPlayServicesError() {
+        Dialog playServicesDialog = DialogFactory.createSimpleOkErrorDialog(
+                SignInActivity.this,
+                R.string.dialog_error_title,
+                R.string.error_message_play_services);
+
+        playServicesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
+        playServicesDialog.show();
     }
 }
