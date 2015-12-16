@@ -6,8 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-import timber.log.Timber;
-
 public class AndroidComponentUtil {
 
     public static void toggleComponent(Context context, Class componentClass, boolean enable) {
