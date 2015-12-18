@@ -1,22 +1,41 @@
-# ribot app
+# ribot app Android
 
 The official [ribot](http://ribot.co.uk) app for android. It follows the architecture, tools and guidelines that we use when developing for the Android platform (https://github.com/ribot/android-guidelines)
 
-Libraries and tools included:
+<p align="center">
+    <img src="images/screens.png" alt="Screenshots"/>
+</p>
+
+The ribot app is an internal project based off of our [Android Boilerplate](https://github.com/ribot/android-boilerplate).
+It was created to make us aware of our fellow ribots locations. Currently, the app allows you to:
+
+- Sign in - Sign in using your @ribot.co.uk Google account
+- Auto Check-in - Using Estimote beacons, the app will automatically check you in at your corresponding
+location in the ribot studio
+- Manual Check-in - Manually check yourself in at your current location
+- Team listing - View a list of ribots and their current check-in status
+
+We've open sourced this to both showcase our efforts and allow you to recreate the
+experience in your own workplace - why not fork this project and give it a go?
+
+## Libraries
+
+The libraries and tools used include:
 
 - Support library
 - RecyclerViews and CardViews 
 - [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
 - [Retrofit](http://square.github.io/retrofit/) and [OkHttp](https://github.com/square/okhttp)
 - [Dagger 2](http://google.github.io/dagger/)
+- [Estimote Android SDK](https://github.com/Estimote/Android-SDK)
 - [SqlBrite](https://github.com/square/sqlbrite)
 - [EasyAdapter](https://github.com/ribot/easy-adapter)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber] (https://github.com/JakeWharton/timber)
 - [Picasso](http://square.github.io/picasso/)
 - [Otto](http://square.github.io/otto/) event bus
-- Functional tests with [Espresso](https://code.google.com/p/android-test-kit/wiki/Espresso)
-- Unit tests with [Robolectric](http://robolectric.org/) 
+- [Espresso](https://google.github.io/android-testing-support-library/)
+- [Robolectric](http://robolectric.org/)
 - [Mockito](http://mockito.org/)
 - [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/) and [Findbugs](http://findbugs.sourceforge.net/) for code analysis
 
@@ -27,6 +46,18 @@ Libraries and tools included:
 - Android SDK Tools
 - Android SDK Build tools 23.0.1
 - Android Support Repository
+
+## Build Instructions
+
+In order to run this project, you'll need to setup several things beforehand:
+
+- Our application uses the [ribot API](https://github.com/ribot/ribot-api) to handle data requests,
+you'll need to clone this and configure it to your requirements. This application will not work without an API and the implementation
+in this repository requires the use of an @ribot.co.uk email address, so your own API is required if you wish to clone this project.
+
+- You'll need to set the values found in the [gradle.properties](gradle.properties) file.
+This involves the web application client id (`ribotAppGoogleApiServerClientId`) and debug/release keystore locations, aliases and passwords. Ideally the
+`UNDEFINED` values found in this file should be defined in the Global `gradle.properties` that lives in `~/.gradle/gradle.properties`
 
 ## Architecture
 
@@ -86,19 +117,21 @@ To ensure that your code is valid and stable use check:
 This will run all the code analysis tools and unit tests in the following order:
 
 ![Check Diagram](images/check-task-diagram.png)
- 
-## Distribution
 
-The project is distributed using the [Google Play Store](https://github.com/Triple-T/gradle-play-publisher).
+# Licence
 
-To do this, set up a local variable `$ANDROID_DISTRIBUTION` to any of the following values:
+```
+Copyright 2015 Ribot Ltd.
 
-    play-production
-    play-alpha
-    play-beta
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    etc
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Then use the following command e.g. on your CI server:
-
-    ./gradlew clean check connectedAndroidTest publishRelease
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
