@@ -5,9 +5,14 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
+import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,6 +28,7 @@ import io.ribot.app.ui.signin.SignInActivity;
 import retrofit.HttpException;
 import retrofit.Response;
 import rx.Observable;
+import timber.log.Timber;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -50,10 +56,13 @@ public class SignInActivityTest {
     private final Account mSelectedAccount =
             new Account("accounts@ribot.com", SignInActivity.ACCOUNT_TYPE_GOOGLE);
 
+    private UiDevice mDevice;
+
     @Before
     public void stubAccountManager() {
         when(component.getMockAccountManager().getAccountsByType(mSelectedAccount.type))
                 .thenReturn(new Account[]{mSelectedAccount});
+        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
     @Test
@@ -81,6 +90,8 @@ public class SignInActivityTest {
 
         onView(withId(R.id.button_sign_in))
                 .perform(click());
+        allowPermissionsIfNeeded();
+
         // Check that it navigates correctly to the welcome screen
         String expectedWelcome = main.getActivity()
                 .getString(R.string.welcome_greetings, ribot.profile.name.first);
@@ -100,6 +111,8 @@ public class SignInActivityTest {
 
         onView(withId(R.id.button_sign_in))
                 .perform(click());
+        allowPermissionsIfNeeded();
+
         onView(withText(R.string.error_sign_in))
                 .check(matches(isDisplayed()));
     }
@@ -117,6 +130,8 @@ public class SignInActivityTest {
 
         onView(withId(R.id.button_sign_in))
                 .perform(click());
+        allowPermissionsIfNeeded();
+
         String expectedWelcome = main.getActivity()
                 .getString(R.string.error_ribot_profile_not_found, mSelectedAccount.name);
         onView(withText(expectedWelcome))
@@ -145,5 +160,18 @@ public class SignInActivityTest {
         // This is not ideal but I couldn't find a better way.
         intending(hasExtraWithKey("allowableAccountTypes"))
                 .respondWith(result);
+    }
+
+    private void allowPermissionsIfNeeded()  {
+        if (Build.VERSION.SDK_INT >= 23) {
+            UiObject allowPermissions = mDevice.findObject(new UiSelector().text("Allow"));
+            if (allowPermissions.exists()) {
+                try {
+                    allowPermissions.click();
+                } catch (UiObjectNotFoundException e) {
+                    Timber.e("There was a problem clicking on the UiObject " + e);
+                }
+            }
+        }
     }
 }
