@@ -59,7 +59,7 @@ public class SignInActivityTest {
     private UiDevice mDevice;
 
     @Before
-    public void stubAccountManager() {
+    public void setup() {
         when(component.getMockAccountManager().getAccountsByType(mSelectedAccount.type))
                 .thenReturn(new Account[]{mSelectedAccount});
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -169,7 +169,7 @@ public class SignInActivityTest {
                 try {
                     allowPermissions.click();
                 } catch (UiObjectNotFoundException e) {
-                    Timber.e("There was a problem clicking on the UiObject " + e);
+                    Timber.w(e, "There is no permissions dialog to interact with ");
                 }
             }
         }
