@@ -90,6 +90,7 @@ dependencies {
     final HAMCREST_VERSION = '1.3'
     final MOCKITO_VERSION = '1.10.19'
     final ESPRESSO_VERSION = '2.2.1'
+    final UI_AUTOMATOR_VERSION = '2.1.2'
     final JUNIT_VERSION = '4.12'
     final RUNNER_VERSION = '0.4'
 
@@ -131,6 +132,7 @@ dependencies {
     }
     androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$UI_AUTOMATOR_VERSION"
     androidTestCompile "com.android.support.test:runner:$RUNNER_VERSION"
     androidTestCompile "com.android.support.test:rules:$RUNNER_VERSION"
     androidTestCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
