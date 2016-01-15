@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,7 +15,8 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:columnWidth="@dimen/team_column_width"
-            android:padding="@dimen/team_item_padding" />
+            android:padding="@dimen/team_item_padding"
+            tools:listitem="@layout/item_team" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
