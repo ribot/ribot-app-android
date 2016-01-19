@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.List;
 
@@ -16,16 +14,19 @@ import io.ribot.app.data.model.Encounter;
 import io.ribot.app.data.model.RegisteredBeacon;
 import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import java.util.concurrent.TimeUnit;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 public interface RibotService {
@@ -65,19 +66,24 @@ public interface RibotService {
     class Factory {
 
         public static RibotService makeRibotService(Context context) {
-            OkHttpClient okHttpClient = new OkHttpClient();
-            okHttpClient.interceptors().add(new UnauthorisedInterceptor(context));
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY
-                    : HttpLoggingInterceptor.Level.NONE);
-            okHttpClient.interceptors().add(logging);
+
+            OkHttpClient.Builder builder_OkHttpClient = new OkHttpClient().newBuilder();
+            builder_OkHttpClient.readTimeout(10, TimeUnit.SECONDS);
+            builder_OkHttpClient.connectTimeout(5, TimeUnit.SECONDS);
+
+          HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+          logging.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+          builder_OkHttpClient.addInterceptor(logging);
+
+          builder_OkHttpClient.addInterceptor(new UnauthorisedInterceptor(context));
+
 
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                     .create();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(RibotService.ENDPOINT)
-                    .client(okHttpClient)
+                    .client(builder_OkHttpClient.build())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();

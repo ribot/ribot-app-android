@@ -25,8 +25,9 @@ import io.ribot.app.data.model.Ribot;
 import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.signin.SignInActivity;
-import retrofit.HttpException;
-import retrofit.Response;
+
+import retrofit2.HttpException;
+import retrofit2.Response;
 import rx.Observable;
 import timber.log.Timber;
 
