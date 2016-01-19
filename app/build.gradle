@@ -1,79 +1,98 @@
 apply plugin: 'com.android.application'
-apply from: '../config/quality/quality.gradle'
-apply plugin: 'com.github.triplet.play'
-apply plugin: 'com.neenbedankt.android-apt'
+    apply from: '../config/quality/quality.gradle'
+    apply plugin: 'com.github.triplet.play'
+    apply plugin: 'com.neenbedankt.android-apt'
 
-android {
+    android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
     defaultConfig {
-        applicationId 'io.ribot.app'
-        minSdkVersion 19
-        targetSdkVersion 23
-        testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
-        versionCode 5000
-        // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
-        versionName '0.5.0'
-        buildConfigField("String", "GOOGLE_API_SERVER_CLIENT_ID",
-                "\"${ribotAppGoogleApiServerClientId}\"")
+    applicationId 'io.ribot.app'
+    minSdkVersion 19
+    targetSdkVersion 23
+    testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
+    versionCode 5000
+    // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
+    versionName '0.5.0'
+    buildConfigField("String", "GOOGLE_API_SERVER_CLIENT_ID",
+    "\"${ribotAppGoogleApiServerClientId}\"")
     }
 
+    signingConfigs {
+    // You must set up an environment var before release signing
+    // Run: export RIBOT_APP_KEY={password}
+    release {
+    storeFile file("${ribotAppKeystoreReleaseLocation}")
+    keyAlias "${ribotAppReleaseKeyAlias}"
+    storePassword "${ribotAppReleaseStorePassword}"
+    keyPassword "${ribotAppReleaseKeyPassword}"
+    }
+
+    debug {
+    storeFile file("${ribotAppKeystoreDebugLocation}")
+    keyAlias "${ribotAppDebugKeyAlias}"
+    storePassword "${ribotAppDebugStorePassword}"
+    keyPassword "${ribotAppDebugKeyPassword}"
+    }
+    }
 
     buildTypes {
 
-        release {
+    release {
+    signingConfig signingConfigs.release
 
             /*
             * By default ProGuard optimizations are disabled. If you want to enable them
             * replace proguard-android.txt with proguard-android-optimize.txt but make sure you
             * test thoroughly if you go this route as app may become unstable.
             */
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    minifyEnabled true
+    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
 
-        debug {
-            versionNameSuffix " Debug"
-            debuggable true
-        }
+    debug {
+    versionNameSuffix " Debug"
+    debuggable true
+    }
     }
 
     sourceSets {
-        def commonTestDir = 'src/commonTest/java'
-        test {
-            java.srcDir commonTestDir
-        }
-        androidTest {
-            java.srcDir commonTestDir
-        }
+    def commonTestDir = 'src/commonTest/java'
+    test {
+    java.srcDir commonTestDir
+    }
+    androidTest {
+    java.srcDir commonTestDir
+    }
     }
 
     //Needed because of this https://github.com/square/okio/issues/58
     lintOptions {
-        warning 'InvalidPackage'
+    warning 'InvalidPackage'
     }
 
-}
+    }
 
-play {
+    play {
     track = 'alpha'
     serviceAccountEmail = "${ribotAppPlayStoreServiceAccount}"
     pk12File = file("${ribotAppPlayStorePk12Location}")
-}
+    }
 
-dependencies {
-    final PLAY_SERVICES_VERSION = '8.3.0'
-    final SUPPORT_LIBRARY_VERSION = '23.1.1'
-    final RETROFIT_VERSION = '2.0.0-beta3'
-    final DAGGER_VERSION = '2.0.2'
-    final DEXMAKER_VERSION = '1.4'
-    final HAMCREST_VERSION = '1.3'
-    final MOCKITO_VERSION = '1.10.19'
-    final ESPRESSO_VERSION = '2.2.1'
-    final UI_AUTOMATOR_VERSION = '2.1.2'
-    final JUNIT_VERSION = '4.12'
-    final RUNNER_VERSION = '0.4'
+    dependencies {
+final PLAY_SERVICES_VERSION = '8.3.0'
+final SUPPORT_LIBRARY_VERSION = '23.1.1'
+final RETROFIT_VERSION = '2.0.0-beta3'
+final OKHTTP_VERSION = '2.7.0'
+final DAGGER_VERSION = '2.0.2'
+final DEXMAKER_VERSION = '1.4'
+final HAMCREST_VERSION = '1.3'
+final MOCKITO_VERSION = '1.10.19'
+final ESPRESSO_VERSION = '2.2.1'
+final UI_AUTOMATOR_VERSION = '2.1.2'
+final JUNIT_VERSION = '4.12'
+final RUNNER_VERSION = '0.4'
 
     compile "com.google.android.gms:play-services-gcm:$PLAY_SERVICES_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
@@ -106,9 +125,9 @@ dependencies {
     androidTestCompile "junit:junit:$JUNIT_VERSION"
     androidTestCompile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:$ESPRESSO_VERSION") {
-        exclude group: 'com.android.support', module: 'appcompat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    exclude group: 'com.android.support', module: 'appcompat'
+    exclude group: 'com.android.support', module: 'support-v4'
+    exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
     androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$ESPRESSO_VERSION"
@@ -130,9 +149,9 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
 
     testApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-}
+    }
 
-// Log out test results to console
-tasks.matching {it instanceof Test}.all {
+    // Log out test results to console
+    tasks.matching {it instanceof Test}.all {
     testLogging.events = ["failed", "passed", "skipped"]
-}
+    }
