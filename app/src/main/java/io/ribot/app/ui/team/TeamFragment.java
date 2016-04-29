@@ -14,7 +14,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
 import io.ribot.app.data.model.Ribot;
@@ -26,10 +26,10 @@ public class TeamFragment extends Fragment implements TeamMvpView {
     @Inject TeamPresenter mTeamPresenter;
     @Inject RibotAdapter mRibotAdapter;
 
-    @Bind(R.id.recycler_view_team) RecyclerView mTeamRecycler;
-    @Bind(R.id.swipe_refresh_container) SwipeRefreshLayout mSwipeRefreshContainer;
-    @Bind(R.id.text_no_ribots) TextView mNoRibotsText;
-    @Bind(R.id.progress) ProgressBar mProgress;
+    @BindView(R.id.recycler_view_team) RecyclerView mTeamRecycler;
+    @BindView(R.id.swipe_refresh_container) SwipeRefreshLayout mSwipeRefreshContainer;
+    @BindView(R.id.text_no_ribots) TextView mNoRibotsText;
+    @BindView(R.id.progress) ProgressBar mProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

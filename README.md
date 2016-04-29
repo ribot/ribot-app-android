@@ -32,7 +32,7 @@ The libraries and tools used include:
 - [EasyAdapter](https://github.com/ribot/easy-adapter)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber] (https://github.com/JakeWharton/timber)
-- [Picasso](http://square.github.io/picasso/)
+- [Glide](https://github.com/bumptech/glide)
 - [Otto](http://square.github.io/otto/) event bus
 - [Espresso](https://google.github.io/android-testing-support-library/)
 - [Robolectric](http://robolectric.org/)

@@ -19,8 +19,10 @@ import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.ui.signin.SignInMvpView;
 import io.ribot.app.ui.signin.SignInPresenter;
 import io.ribot.app.util.RxSchedulersOverrideRule;
-import retrofit.HttpException;
-import retrofit.Response;
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 
 import static org.mockito.Matchers.any;
@@ -96,7 +98,8 @@ public class SignInPresenterTest {
     @Test
     public void signInFailedWithRibotProfileNotFoundError() {
         //Stub mock data manager
-        HttpException http403Exception = new HttpException(Response.error(403, null));
+        HttpException http403Exception = new HttpException(Response.error(403,
+                ResponseBody.create(MediaType.parse("type"), "")));
         stubDataManagerSignIn(Observable.error(http403Exception));
 
         mSignInPresenter.signInWithGoogle(mAccount);
