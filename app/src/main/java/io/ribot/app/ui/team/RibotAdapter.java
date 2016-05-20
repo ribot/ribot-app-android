@@ -44,16 +44,15 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
         holder.name.setText(ribot.profile.name.first);
         Glide.with(holder.itemView.getContext())
                 .load(ribot.profile.avatar)
-                .fitCenter()
                 .centerCrop()
                 .placeholder(R.drawable.profile_placeholder_large)
                 .into(holder.avatar);
-        CheckIn latestCheckIn = ribot.getLatestCheckIn();
 
+        CheckIn latestCheckIn = ribot.latestCheckIn;
         if (latestCheckIn != null
                 && !latestCheckIn.isCheckedOut
                 && DateUtil.isToday(latestCheckIn.checkedInDate.getTime())) {
-            Encounter latestEncounter = latestCheckIn.getLatestEncounter();
+            Encounter latestEncounter = latestCheckIn.latestBeaconEncounter;
             holder.location.setText(latestEncounter == null ? latestCheckIn.getLocationName() :
                     latestEncounter.beacon.zone.label);
             holder.layoutContainer.setAlpha(1f);
