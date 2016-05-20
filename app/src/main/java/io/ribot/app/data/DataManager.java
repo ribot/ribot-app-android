@@ -89,7 +89,7 @@ public class DataManager {
 
     public Observable<List<Ribot>> getRibots() {
         String auth = RibotService.Util.buildAuthorization(mPreferencesHelper.getAccessToken());
-        return mRibotService.getRibots(auth, "checkins");
+        return mRibotService.getRibots(auth, "latestCheckIn");
     }
 
     /**

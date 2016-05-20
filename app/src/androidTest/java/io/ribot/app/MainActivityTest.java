@@ -77,14 +77,11 @@ public class MainActivityTest {
         // quite buggy when trying to scroll a grid.
         List<Ribot> ribotList = MockModelFabric.newRibotList(4);
         // First ribot is checked in
-        ribotList.get(0).checkIns =
-                Collections.singletonList(MockModelFabric.newCheckInWithVenue());
+        ribotList.get(0).latestCheckIn = MockModelFabric.newCheckInWithVenue();
         // Last ribot is checked-in with an encounter
         CheckIn checkInWithEncounters = MockModelFabric.newCheckInWithVenue();
-        checkInWithEncounters.beaconEncounters =
-                Collections.singletonList(MockModelFabric.newEncounter());
-        ribotList.get(ribotList.size() - 1).checkIns =
-                Collections.singletonList(checkInWithEncounters);
+        checkInWithEncounters.latestBeaconEncounter = MockModelFabric.newEncounter();
+        ribotList.get(ribotList.size() - 1).latestCheckIn = checkInWithEncounters;
         // The RecylerView will sort the list so we ensure our list is sorted
         // the same before comparing
         Collections.sort(ribotList);
@@ -130,16 +127,16 @@ public class MainActivityTest {
             onView(withId(R.id.recycler_view_team))
                     .perform(RecyclerViewActions.scrollToPosition(i));
             Ribot ribot = ribotsToCheck.get(i);
-            if (ribot.checkIns != null && !ribot.checkIns.isEmpty()) {
-                CheckIn checkIn = ribot.checkIns.get(0);
-                Encounter encounter = checkIn.getLatestEncounter();
+            CheckIn checkIn = ribot.latestCheckIn;
+            if (checkIn != null) {
+                Encounter encounter = checkIn.latestBeaconEncounter;
                 String expectedLocationName = encounter == null ? checkIn.getLocationName() :
                         encounter.beacon.zone.label;
                 onView(withText(expectedLocationName))
                         .check(matches(isDisplayed()));
+                onView(withText(ribot.profile.name.first))
+                        .check(matches(isDisplayed()));
             }
-            onView(withText(ribot.profile.name.first))
-                    .check(matches(isDisplayed()));
         }
     }
 
