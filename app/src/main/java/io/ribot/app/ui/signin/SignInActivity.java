@@ -23,7 +23,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.ribot.app.R;
@@ -50,10 +50,10 @@ public class SignInActivity extends BaseActivity implements SignInMvpView {
     private Account mSelectedAccount;
     private boolean mShouldFinishOnStop;
 
-    @Bind(R.id.button_sign_in) Button mSignInButton;
-    @Bind(R.id.progress) ProgressBar mProgressBar;
-    @Bind(R.id.text_welcome) TextView mWelcomeTextView;
-    @Bind(R.id.image_ribot_logo) ImageView mRibotLogo;
+    @BindView(R.id.button_sign_in) Button mSignInButton;
+    @BindView(R.id.progress) ProgressBar mProgressBar;
+    @BindView(R.id.text_welcome) TextView mWelcomeTextView;
+    @BindView(R.id.image_ribot_logo) ImageView mRibotLogo;
 
     public static Intent getStartIntent(Context context, boolean clearPreviousActivities) {
         Intent intent = new Intent(context, SignInActivity.class);

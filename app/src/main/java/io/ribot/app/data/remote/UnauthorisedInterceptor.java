@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Response;
 import com.squareup.otto.Bus;
 
 import java.io.IOException;
@@ -14,6 +12,8 @@ import javax.inject.Inject;
 
 import io.ribot.app.RibotApplication;
 import io.ribot.app.data.BusEvent;
+import okhttp3.Interceptor;
+import okhttp3.Response;
 
 public class UnauthorisedInterceptor implements Interceptor {
 

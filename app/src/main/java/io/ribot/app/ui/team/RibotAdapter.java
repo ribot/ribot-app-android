@@ -8,14 +8,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.ribot.app.R;
 import io.ribot.app.data.model.CheckIn;
@@ -42,9 +42,9 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
     public void onBindViewHolder(final RibotHolder holder, final int position) {
         Ribot ribot = mTeamMembers.get(position);
         holder.name.setText(ribot.profile.name.first);
-        Picasso.with(holder.itemView.getContext())
+        Glide.with(holder.itemView.getContext())
                 .load(ribot.profile.avatar)
-                .fit()
+                .fitCenter()
                 .centerCrop()
                 .placeholder(R.drawable.profile_placeholder_large)
                 .into(holder.avatar);
@@ -75,16 +75,16 @@ public class RibotAdapter extends RecyclerView.Adapter<RibotAdapter.RibotHolder>
 
     class RibotHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.layout_container)
+        @BindView(R.id.layout_container)
         public RelativeLayout layoutContainer;
 
-        @Bind(R.id.text_name)
+        @BindView(R.id.text_name)
         public TextView name;
 
-        @Bind(R.id.circle_image_profile_main)
+        @BindView(R.id.circle_image_profile_main)
         public ImageView avatar;
 
-        @Bind(R.id.text_location)
+        @BindView(R.id.text_location)
         public TextView location;
 
         public RibotHolder(View itemView) {

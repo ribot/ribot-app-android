@@ -25,8 +25,10 @@ import io.ribot.app.data.model.Ribot;
 import io.ribot.app.test.common.MockModelFabric;
 import io.ribot.app.test.common.TestComponentRule;
 import io.ribot.app.ui.signin.SignInActivity;
-import retrofit.HttpException;
-import retrofit.Response;
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -123,7 +125,8 @@ public class SignInActivityTest {
         stubAccountPickerIntent();
 
         // Stub with http 403 error
-        HttpException http403Exception = new HttpException(Response.error(403, null));
+        HttpException http403Exception = new HttpException(Response.error(403,
+                ResponseBody.create(MediaType.parse("type"), "")));
         doReturn(Observable.error(http403Exception))
                 .when(component.getMockDataManager())
                 .signIn(mSelectedAccount);

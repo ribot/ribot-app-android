@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.ribot.app.R;
@@ -114,13 +114,13 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenueViewH
 
     class VenueViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.text_venue_name)
+        @BindView(R.id.text_venue_name)
         public TextView textVenueName;
-        @Bind(R.id.image_venue_tick)
+        @BindView(R.id.image_venue_tick)
         public ImageView imageVenueTick;
-        @Bind(R.id.progress_check_in)
+        @BindView(R.id.progress_check_in)
         public ProgressBar progressCheckIn;
-        @Bind(R.id.layout_item)
+        @BindView(R.id.layout_item)
         public View layoutItem;
         public Venue venue;
 

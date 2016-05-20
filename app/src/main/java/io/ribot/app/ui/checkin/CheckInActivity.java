@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
@@ -36,11 +36,11 @@ public class CheckInActivity extends BaseActivity
     @Inject
     protected CheckInPresenter mCheckInPresenter;
 
-    @Bind(R.id.edit_text_location) EditText mEditTextLocation;
-    @Bind(R.id.fab_check_in) FloatingActionButton mFabCheckIn;
-    @Bind(R.id.progress_venues) ProgressBar mProgressVenues;
-    @Bind(R.id.progress_check_in) ProgressBar mProgressCheckIn;
-    @Bind(R.id.recycler_view_venues) RecyclerView mRecyclerViewVenues;
+    @BindView(R.id.edit_text_location) EditText mEditTextLocation;
+    @BindView(R.id.fab_check_in) FloatingActionButton mFabCheckIn;
+    @BindView(R.id.progress_venues) ProgressBar mProgressVenues;
+    @BindView(R.id.progress_check_in) ProgressBar mProgressCheckIn;
+    @BindView(R.id.recycler_view_venues) RecyclerView mRecyclerViewVenues;
 
     private VenuesAdapter mVenuesAdapter;
 

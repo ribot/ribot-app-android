@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.ribot.app.R;
@@ -30,9 +32,9 @@ public class WelcomeActivity extends BaseActivity {
     private static final String EXTRA_TIME_DISPLAYING =
             "io.ribot.app.ui.WelcomeActivity.EXTRA_TIME_DISPLAYING";
 
-    @Bind(R.id.layout_profile_info) View mProfileInfoLayout;
-    @Bind(R.id.image_profile) CircleImageView mProfileImage;
-    @Bind(R.id.text_greeting) TextView mGreetingText;
+    @BindView(R.id.layout_profile_info) View mProfileInfoLayout;
+    @BindView(R.id.image_profile) CircleImageView mProfileImage;
+    @BindView(R.id.text_greeting) TextView mGreetingText;
 
     private Handler mHandler;
     private long mTimeDisplaying;
@@ -103,19 +105,26 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void loadProfileImage(String avatar) {
-        Picasso.with(this)
+        Glide.with(this)
                 .load(avatar)
                 .placeholder(R.drawable.profile_placeholder_large)
                 .error(R.drawable.profile_placeholder_large)
-                .into(mProfileImage, new Callback() {
+                .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
-                    public void onSuccess() {
-                        mProfileImage.setBorderColor(Color.WHITE);
+                    public boolean onException(Exception e, String model,
+                                               Target<GlideDrawable> target,
+                                               boolean isFirstResource) {
+                        Timber.e("There was an error loading the profile image");
+                        return false;
                     }
 
                     @Override
-                    public void onError() {
-                        Timber.e("There was an error loading the profile image");
+                    public boolean onResourceReady(GlideDrawable resource, String model,
+                                                   Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache,
+                                                   boolean isFirstResource) {
+                        mProfileImage.setBorderColor(Color.WHITE);
+                        return false;
                     }
                 });
     }
