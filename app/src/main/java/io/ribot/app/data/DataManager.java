@@ -114,6 +114,8 @@ public class DataManager {
                         return getVenuesRecoveryObservable(throwable);
                     }
                 })
+                .startWith(mPreferencesHelper.getVenuesAsObservable())
+                .distinct();
     }
 
     // Returns venues from cache. If cache is empty, it forwards the error.
