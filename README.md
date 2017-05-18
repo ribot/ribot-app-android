@@ -31,7 +31,7 @@ The libraries and tools used include:
 - [SqlBrite](https://github.com/square/sqlbrite)
 - [EasyAdapter](https://github.com/ribot/easy-adapter)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
-- [Timber] (https://github.com/JakeWharton/timber)
+- [Timber](https://github.com/JakeWharton/timber)
 - [Glide](https://github.com/bumptech/glide)
 - [Otto](http://square.github.io/otto/) event bus
 - [Espresso](https://google.github.io/android-testing-support-library/)
