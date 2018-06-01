@@ -1,3 +1,5 @@
+Thank you for your interest in ribot’s development work. Unfortunately there are no current plans to make any changes to this project in the near future, and it is not being maintained or updated. We hope you still find this a useful resource.
+
 # ribot app Android
 
 The official [ribot](http://ribot.co.uk) app for android. It follows the architecture, tools and guidelines that we use when developing for the Android platform (https://github.com/ribot/android-guidelines)
