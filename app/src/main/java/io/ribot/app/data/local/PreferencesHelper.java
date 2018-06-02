@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,7 +22,6 @@ import io.ribot.app.data.model.Ribot;
 import io.ribot.app.data.model.Venue;
 import io.ribot.app.injection.ApplicationContext;
 import rx.Observable;
-import rx.Subscriber;
 
 @Singleton
 public class PreferencesHelper {
@@ -88,14 +88,11 @@ public class PreferencesHelper {
     }
 
     public Observable<List<Venue>> getVenuesAsObservable() {
-        return Observable.create(new Observable.OnSubscribe<List<Venue>>() {
+
+        return Observable.fromCallable(new Callable<List<Venue>>() {
             @Override
-            public void call(Subscriber<? super List<Venue>> subscriber) {
-                List<Venue> venues = getVenues();
-                if (venues != null) {
-                    subscriber.onNext(venues);
-                }
-                subscriber.onCompleted();
+            public List<Venue> call() throws Exception {
+                return getVenues();
             }
         });
     }
@@ -114,14 +111,10 @@ public class PreferencesHelper {
     }
 
     public Observable<CheckIn> getLatestCheckInAsObservable() {
-        return Observable.create(new Observable.OnSubscribe<CheckIn>() {
+        return Observable.fromCallable(new Callable<CheckIn>() {
             @Override
-            public void call(Subscriber<? super CheckIn> subscriber) {
-                CheckIn checkIn = getLatestCheckIn();
-                if (checkIn != null) {
-                    subscriber.onNext(checkIn);
-                }
-                subscriber.onCompleted();
+            public CheckIn call() throws Exception {
+                return getLatestCheckIn();
             }
         });
     }
